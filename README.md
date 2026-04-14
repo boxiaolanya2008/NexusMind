@@ -1,39 +1,41 @@
 # NexusMind AI Model Proxy
 
-一个统一的 AI 模型代理服务，支持多个主流 AI 模型提供商，提供统一的 API 接口。
+A unified AI model proxy service supporting multiple mainstream AI model providers with a unified OpenAI-compatible API interface.
 
-## 功能特性
+[中文文档](./README_ZH.md)
 
-- **多模型支持**：支持 OpenAI、Anthropic、Google、MiniMax、Mistral、Qwen、XAI、智谱等多个 AI 模型提供商
-- **统一 API**：提供统一的 OpenAI 兼容 API 接口
-- **用户管理**：完整的用户注册、登录、权限管理系统
-- **计费系统**：基于 Token 消耗的精确计费
-- **管理后台**：用户管理、模型管理、统计查看
-- **模型智商调节**：支持动态调整模型智商等级
-- **知识库集成**：支持 RAG 知识库检索增强
-- **国际化**：支持中英文双语界面
-- **响应式设计**：现代化的毛玻璃效果 UI 设计
+## Features
 
-## 技术栈
+- **Multi-Model Support**: Supports OpenAI, Anthropic, Google, MiniMax, Mistral, Qwen, XAI, Zhipu and other AI model providers
+- **Unified API**: Provides a unified OpenAI-compatible API interface
+- **User Management**: Complete user registration, login, and permission management system
+- **Billing System**: Precise billing based on token consumption
+- **Admin Panel**: User management, model management, statistics viewing
+- **Model Intelligence Adjustment**: Supports dynamic adjustment of model intelligence levels
+- **Knowledge Base Integration**: Supports RAG knowledge base retrieval enhancement
+- **Internationalization**: Supports bilingual Chinese and English interface
+- **Responsive Design**: Modern frosted glass effect UI design
 
-### 后端
+## Tech Stack
+
+### Backend
 - Node.js + Express
-- SQLite 数据库
-- JWT 身份验证
-- 请求队列管理
-- 热重载配置
+- SQLite Database
+- JWT Authentication
+- Request Queue Management
+- Hot Reload Configuration
 
-### 前端
+### Frontend
 - Vue 3 + Vite
-- Pinia 状态管理
-- Vue Router 路由
-- Tailwind CSS 样式
-- Element Plus UI 组件
-- ECharts 图表
+- Pinia State Management
+- Vue Router
+- Tailwind CSS
+- Element Plus UI Components
+- ECharts Charts
 
-## 快速开始
+## Quick Start
 
-### 后端启动
+### Backend Start
 
 ```bash
 cd backend
@@ -41,9 +43,9 @@ npm install
 npm start
 ```
 
-后端服务将运行在 `http://localhost:3000`
+Backend service will run on `http://localhost:3000`
 
-### 前端启动
+### Frontend Start
 
 ```bash
 cd frontend
@@ -51,71 +53,71 @@ npm install
 npm run dev
 ```
 
-前端服务将运行在 `http://localhost:5173`
+Frontend service will run on `http://localhost:5173`
 
-## API 文档
+## API Documentation
 
-### 认证接口
+### Authentication Endpoints
 
-- `POST /api/auth/register` - 用户注册
-- `POST /api/auth/login` - 用户登录
-- `GET /api/auth/profile` - 获取用户信息
-- `GET /api/auth/stats` - 获取用户统计数据
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/profile` - Get user information
+- `GET /api/auth/stats` - Get user statistics
 
-### 模型接口
+### Model Endpoints
 
-- `GET /api/models` - 获取可用模型列表
-- `POST /api/v1/chat/completions` - 聊天完成接口（OpenAI 兼容）
+- `GET /api/models` - Get available model list
+- `POST /api/v1/chat/completions` - Chat completion endpoint (OpenAI compatible)
 
-### 管理接口
+### Admin Endpoints
 
-- `GET /api/admin/users` - 获取用户列表
-- `GET /api/admin/stats` - 获取系统统计数据
-- `POST /api/admin/model-intelligence` - 更新模型智商
+- `GET /api/admin/users` - Get user list
+- `GET /api/admin/stats` - Get system statistics
+- `POST /api/admin/model-intelligence` - Update model intelligence
 
-## 配置说明
+## Configuration
 
-### 环境变量
+### Environment Variables
 
-在 `backend` 目录下创建 `.env` 文件：
+Create `.env` file in `backend` directory:
 
 ```env
 PORT=3000
 JWT_SECRET=your-secret-key
 ```
 
-### 模型配置
+### Model Configuration
 
-模型配置位于 `backend/src/config/models.js`，支持热重载。
+Model configuration is located in `backend/src/config/models.js` and supports hot reload.
 
-## 项目结构
+## Project Structure
 
 ```
 NexusMind/
-├── backend/          # 后端服务
+├── backend/          # Backend service
 │   ├── src/
-│   │   ├── config/   # 配置文件
-│   │   ├── controllers/ # 控制器
-│   │   ├── middleware/ # 中间件
-│   │   ├── routes/   # 路由
-│   │   ├── services/ # 服务
-│   │   └── utils/    # 工具函数
-│   └── data/         # 数据库文件
-├── frontend/         # 前端应用
+│   │   ├── config/   # Configuration files
+│   │   ├── controllers/ # Controllers
+│   │   ├── middleware/ # Middleware
+│   │   ├── routes/   # Routes
+│   │   ├── services/ # Services
+│   │   └── utils/    # Utility functions
+│   └── data/         # Database files
+├── frontend/         # Frontend application
 │   ├── src/
-│   │   ├── components/ # 组件
-│   │   ├── locales/  # 国际化文件
-│   │   ├── stores/   # 状态管理
-│   │   ├── views/    # 页面
-│   │   └── router/   # 路由配置
-│   └── public/       # 静态资源
-└── knowledge_base/   # 知识库文件
+│   │   ├── components/ # Components
+│   │   ├── locales/  # Internationalization files
+│   │   ├── stores/   # State management
+│   │   ├── views/    # Pages
+│   │   └── router/   # Router configuration
+│   └── public/       # Static assets
+└── knowledge_base/   # Knowledge base files
 ```
 
-## 许可证
+## License
 
 MIT License
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 和 Pull Request！
+Welcome to submit Issues and Pull Requests!
