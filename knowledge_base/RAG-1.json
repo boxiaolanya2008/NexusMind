@@ -1,0 +1,33 @@
+{
+  "name": "NexusMind Documentation",
+  "version": "1.0",
+  "entries": [
+    {
+      "id": "entry-1",
+      "content": "NexusMind is an AI model proxy service that provides access to multiple AI models through a unified API. It supports OpenAI, Anthropic, and Google API formats.",
+      "tags": ["documentation", "proxy", "api"],
+      "metadata": {
+        "source": "internal",
+        "category": "overview"
+      }
+    },
+    {
+      "id": "entry-2",
+      "content": "NexusMind uses GLM-5 as the underlying model and uses system prompts to impersonate various AI models like GPT-5.4, Claude Opus 4.6, and Gemini 3.1 Pro.",
+      "tags": ["architecture", "glm-5", "impersonation"],
+      "metadata": {
+        "source": "internal",
+        "category": "technical"
+      }
+    },
+    {
+      "id": "entry-3",
+      "content": "NexusMind supports token-based billing with different pricing for different models. Users can recharge their balance and track usage statistics.",
+      "tags": ["billing", "pricing", "tokens"],
+      "metadata": {
+        "source": "internal",
+        "category": "billing"
+      }
+    }
+  ]
+}
