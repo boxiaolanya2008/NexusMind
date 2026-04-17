@@ -27,11 +27,11 @@ export function checkBalance(userId, estimatedCost) {
   }
   
   if (user.balance < estimatedCost) {
-    return { 
-      sufficient: false, 
-      balance: user.balance, 
+    return {
+      sufficient: false,
+      balance: user.balance,
       estimatedCost,
-      message: '余额不足，请先充值' 
+      message: 'Insufficient balance'
     };
   }
   

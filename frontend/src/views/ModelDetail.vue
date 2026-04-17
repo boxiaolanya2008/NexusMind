@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <!-- 顶部导航栏 -->
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -45,7 +44,6 @@
     </div>
 
     <div v-else-if="model" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <!-- 模型基本信息卡片 -->
       <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in border border-gray-200/50 dark:border-gray-700/50">
         <div class="flex items-start justify-between">
           <div class="flex items-center space-x-6">
@@ -83,11 +81,8 @@
         </div>
       </div>
 
-      <!-- 主要内容区域 -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- 左侧：价格和规格 -->
         <div class="space-y-6">
-          <!-- 价格信息 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 animate-fade-in border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +110,6 @@
             </div>
           </div>
 
-          <!-- 模型规格 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-lg shadow p-6 border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,9 +138,7 @@
           </div>
         </div>
 
-        <!-- 中间：基准测试 -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- 基准测试表格 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-lg shadow p-6 border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,7 +209,6 @@
             </div>
           </div>
 
-          <!-- 能力雷达图 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-lg shadow p-6 border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,7 +305,6 @@ function initRadarChart() {
   const mmlu = parseFloat(model.value.benchmarks?.mmlu) || 0
   const intelligenceLevel = parseFloat(model.value.intelligence_level) || 0
   
-  // 计算代码能力和推理能力（基于真实benchmark数据）
   const codingAbility = (sweBench * 0.6 + intelligenceLevel * 0.4)
   const reasoningAbility = (gpqa * 0.4 + arcAgi * 0.3 + mmlu * 0.3)
   

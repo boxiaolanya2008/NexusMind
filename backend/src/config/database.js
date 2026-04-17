@@ -103,43 +103,6 @@ export async function initializeDatabase() {
     );
   `);
 
-  try {
-    db.run(`ALTER TABLE models ADD COLUMN swe_bench REAL DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE models ADD COLUMN arc_agi REAL DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE models ADD COLUMN gpqa REAL DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE models ADD COLUMN mmlu REAL DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE requests ADD COLUMN prompt_tokens INTEGER DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE requests ADD COLUMN completion_tokens INTEGER DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE knowledge_base ADD COLUMN user_id INTEGER`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE knowledge_base ADD COLUMN fragment_id TEXT`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE knowledge_base ADD COLUMN fragment_type TEXT`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE knowledge_base ADD COLUMN importance REAL DEFAULT 0.5`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE knowledge_base ADD COLUMN access_count INTEGER DEFAULT 0`);
-  } catch (e) {}
-  try {
-    db.run(`ALTER TABLE knowledge_base ADD COLUMN last_accessed DATETIME`);
-  } catch (e) {}
-
   saveDatabase();
   logger.info('Database initialized successfully');
 }

@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Hero Section -->
     <section class="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-900 dark:via-indigo-900 dark:to-blue-950 text-white py-24 relative overflow-hidden">
       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -30,7 +29,6 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
     <section class="py-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -54,7 +52,6 @@
       </div>
     </section>
 
-    <!-- Features Section -->
     <section class="py-24 bg-gray-50 dark:bg-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">{{ t('home.features.title') }}</h2>
@@ -120,7 +117,6 @@
       </div>
     </section>
 
-    <!-- Models Section -->
     <section class="py-20 bg-white dark:bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center mb-4 text-gray-900 dark:text-white">{{ t('home.models.title') }}</h2>
@@ -155,14 +151,12 @@
       </div>
     </section>
 
-    <!-- Benchmark Section -->
     <section class="py-20 bg-gray-50 dark:bg-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center mb-4 text-gray-900 dark:text-white">{{ t('home.benchmarks.title') }}</h2>
         <p class="text-center text-gray-600 dark:text-gray-400 mb-16">{{ t('home.benchmarks.subtitle') }}</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- GPT-5.4 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
             <div class="flex items-center mb-4">
               <img src="/logos/openai.svg" alt="OpenAI" class="w-10 h-10 mr-3"/>
@@ -196,7 +190,6 @@
             </div>
           </div>
 
-          <!-- Claude 4.6 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
             <div class="flex items-center mb-4">
               <img src="/logos/anthropic.svg" alt="Anthropic" class="w-10 h-10 mr-3"/>
@@ -230,7 +223,6 @@
             </div>
           </div>
 
-          <!-- Gemini 3.1 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
             <div class="flex items-center mb-4">
               <img src="/logos/google.svg" alt="Google" class="w-10 h-10 mr-3"/>
@@ -264,7 +256,6 @@
             </div>
           </div>
 
-          <!-- Grok 4 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
             <div class="flex items-center mb-4">
               <img src="/logos/xai.svg" alt="xAI" class="w-10 h-10 mr-3"/>
@@ -298,7 +289,6 @@
             </div>
           </div>
 
-          <!-- GLM-5.1 -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
             <div class="flex items-center mb-4">
               <img src="/logos/zhipu.svg" alt="Zhipu" class="w-10 h-10 mr-3"/>
@@ -332,7 +322,6 @@
             </div>
           </div>
 
-          <!-- Comparison Note -->
           <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center text-center">
             <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -348,7 +337,6 @@
       </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="py-24 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-900 dark:via-indigo-900 dark:to-blue-950 text-white relative overflow-hidden">
       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">

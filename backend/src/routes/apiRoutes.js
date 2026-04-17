@@ -1,7 +1,6 @@
 import express from 'express';
 import { getModels, getTools, getMemoryFragments, clearMemoryFragments, chatCompletion } from '../controllers/modelController.js';
 import { authenticateApiKey } from '../middleware/authMiddleware.js';
-// import { apiLimiter, tokenRateLimit } from '../middleware/rateLimitMiddleware.js';
 
 const router = express.Router();
 

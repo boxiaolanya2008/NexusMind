@@ -149,7 +149,6 @@ export async function updateModelIntelligence(req, res) {
     
     if (intelligenceLevel !== undefined) {
       updateModelConfig(modelId, 'intelligence_level', intelligenceLevel.toString());
-      // 同时更新models表中的intelligence_level字段
       const updateSql = `UPDATE models SET intelligence_level = ${intelligenceLevel} WHERE id = ${modelId}`;
       const stmt = prepare(updateSql);
       stmt.run();
@@ -157,7 +156,6 @@ export async function updateModelIntelligence(req, res) {
     
     if (qualityLevel) {
       updateModelConfig(modelId, 'quality_level', qualityLevel);
-      // 同时更新models表中的quality_level字段
       const updateSql = `UPDATE models SET quality_level = '${qualityLevel}' WHERE id = ${modelId}`;
       const stmt = prepare(updateSql);
       stmt.run();

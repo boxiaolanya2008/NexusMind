@@ -1,70 +1,62 @@
 import logger from '../utils/logger.js';
 
-export function convertToOpenAIFormat(request, modelName) {
+function extractMessages(request, includeSystem = true) {
   const messages = [];
-  
-  if (request.system) {
+
+  if (includeSystem && request.system) {
     messages.push({ role: 'system', content: request.system });
   }
-  
+
   if (request.messages) {
     messages.push(...request.messages);
   } else if (request.prompt) {
     messages.push({ role: 'user', content: request.prompt });
   }
-  
+
+  return messages;
+}
+
+function addOptionalParams(result, request) {
+  if (request.max_tokens) {
+    result.max_tokens = request.max_tokens;
+  }
+  return result;
+}
+
+export function convertToOpenAIFormat(request, modelName) {
   const result = {
     model: modelName,
-    messages: messages,
+    messages: extractMessages(request, true),
     temperature: request.temperature || 0.7,
     stream: request.stream || false
   };
-  
-  if (request.max_tokens) {
-    result.max_tokens = request.max_tokens;
-  }
-  
-  return result;
+
+  return addOptionalParams(result, request);
 }
 
 export function convertToAnthropicFormat(request, modelName) {
-  const messages = [];
-  
-  if (request.messages) {
-    messages.push(...request.messages);
-  } else if (request.prompt) {
-    messages.push({ role: 'user', content: request.prompt });
-  }
-  
   const result = {
     model: modelName,
-    messages: messages,
+    messages: extractMessages(request, false),
     system: request.system || '',
     stream: request.stream || false
   };
-  
-  if (request.max_tokens) {
-    result.max_tokens = request.max_tokens;
-  }
-  
-  return result;
+
+  return addOptionalParams(result, request);
 }
 
 export function convertToGoogleFormat(request, modelName) {
+  const messages = extractMessages(request, false);
   const contents = [];
-  
-  if (request.messages) {
-    for (const msg of request.messages) {
-      if (msg.role === 'user') {
-        contents.push({ role: 'user', parts: [{ text: msg.content }] });
-      } else if (msg.role === 'assistant') {
-        contents.push({ role: 'model', parts: [{ text: msg.content }] });
-      }
+
+  for (const msg of messages) {
+    if (msg.role === 'user') {
+      contents.push({ role: 'user', parts: [{ text: msg.content }] });
+    } else if (msg.role === 'assistant') {
+      contents.push({ role: 'model', parts: [{ text: msg.content }] });
     }
-  } else if (request.prompt) {
-    contents.push({ role: 'user', parts: [{ text: request.prompt }] });
   }
-  
+
   const result = {
     model: modelName,
     contents: contents,
@@ -72,38 +64,34 @@ export function convertToGoogleFormat(request, modelName) {
       temperature: request.temperature || 0.7
     }
   };
-  
+
   if (request.max_tokens) {
     result.generationConfig.maxOutputTokens = request.max_tokens;
   }
-  
+
   return result;
 }
 
 export function convertToGLMFormat(request, systemPrompt) {
   const messages = [];
-  
+
   if (systemPrompt) {
     messages.push({ role: 'system', content: systemPrompt });
   }
-  
+
   if (request.messages) {
     messages.push(...request.messages);
   } else if (request.prompt) {
     messages.push({ role: 'user', content: request.prompt });
   }
-  
+
   const result = {
     messages: messages,
     temperature: request.temperature || 0.7,
     stream: request.stream || false
   };
-  
-  if (request.max_tokens) {
-    result.max_tokens = request.max_tokens;
-  }
-  
-  return result;
+
+  return addOptionalParams(result, request);
 }
 
 export function convertFromGLMToOpenAI(glmResponse) {

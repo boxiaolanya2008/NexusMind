@@ -10,6 +10,7 @@ import './style.css'
 import zhCN from './locales/zh-CN.js'
 import enUS from './locales/en-US.js'
 import { useI18nStore } from './stores/i18n'
+import { FPSMonitor, PerformanceMetrics, rafThrottle, scheduleIdleCallback } from './utils/performance.js'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -35,5 +36,33 @@ app.use(ElementPlus)
 
 const i18nStore = useI18nStore()
 i18n.locale = i18nStore.locale
+
+const fpsMonitor = new FPSMonitor()
+const performanceMetrics = new PerformanceMetrics()
+
+if (import.meta.env.DEV) {
+  fpsMonitor.start()
+  fpsMonitor.onFPSChange((fps) => {
+    if (fps < 30) {
+      console.warn(`Low FPS detected: ${fps}`)
+    }
+  })
+  
+  performanceMetrics.observePaint()
+  performanceMetrics.observeLayoutShift()
+}
+
+app.config.globalProperties.$fpsMonitor = fpsMonitor
+app.config.globalProperties.$performanceMetrics = performanceMetrics
+app.config.globalProperties.$rafThrottle = rafThrottle
+app.config.globalProperties.$scheduleIdleCallback = scheduleIdleCallback
+
+const handleScroll = rafThrottle(() => {})
+
+window.addEventListener('scroll', handleScroll, { passive: true })
+
+scheduleIdleCallback(() => {
+  if ('serviceWorker' in navigator) {}
+})
 
 app.mount('#app')

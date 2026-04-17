@@ -177,35 +177,63 @@ export async function initializeModels() {
 
   for (const model of models) {
     const benchmarks = model.benchmarks || {};
-    
-    const existingStmt = prepare(`SELECT id FROM models WHERE name = '${model.name}'`);
-    const existing = existingStmt.get();
-    
+
+    const existingStmt = prepare('SELECT id FROM models WHERE name = ?');
+    const existing = existingStmt.get(model.name);
+
     if (existing && existing.id) {
-      const sql = `
+      const updateStmt = prepare(`
         UPDATE models SET
-          display_name = '${model.display_name}',
-          provider = '${model.provider}',
-          input_price = ${model.input_price},
-          output_price = ${model.output_price},
-          api_format = '${model.api_format}',
-          intelligence_level = ${model.intelligence_level},
-          quality_level = '${model.quality_level}',
-          logo_url = '${model.logo_url}',
-          swe_bench = ${benchmarks.swe_bench || 0},
-          arc_agi = ${benchmarks.arc_agi || 0},
-          gpqa = ${benchmarks.gpqa || 0},
-          mmlu = ${benchmarks.mmlu || 0}
-        WHERE name = '${model.name}'
-      `;
-      prepare(sql).run();
+          display_name = ?,
+          provider = ?,
+          input_price = ?,
+          output_price = ?,
+          api_format = ?,
+          intelligence_level = ?,
+          quality_level = ?,
+          logo_url = ?,
+          swe_bench = ?,
+          arc_agi = ?,
+          gpqa = ?,
+          mmlu = ?
+        WHERE name = ?
+      `);
+      updateStmt.run(
+        model.display_name,
+        model.provider,
+        model.input_price,
+        model.output_price,
+        model.api_format,
+        model.intelligence_level,
+        model.quality_level,
+        model.logo_url,
+        benchmarks.swe_bench || 0,
+        benchmarks.arc_agi || 0,
+        benchmarks.gpqa || 0,
+        benchmarks.mmlu || 0,
+        model.name
+      );
     } else {
-      const sql = `
-        INSERT INTO models 
+      const insertStmt = prepare(`
+        INSERT INTO models
         (name, display_name, provider, input_price, output_price, api_format, intelligence_level, quality_level, logo_url, swe_bench, arc_agi, gpqa, mmlu)
-        VALUES ('${model.name}', '${model.display_name}', '${model.provider}', ${model.input_price}, ${model.output_price}, '${model.api_format}', ${model.intelligence_level}, '${model.quality_level}', '${model.logo_url}', ${benchmarks.swe_bench || 0}, ${benchmarks.arc_agi || 0}, ${benchmarks.gpqa || 0}, ${benchmarks.mmlu || 0})
-      `;
-      prepare(sql).run();
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      insertStmt.run(
+        model.name,
+        model.display_name,
+        model.provider,
+        model.input_price,
+        model.output_price,
+        model.api_format,
+        model.intelligence_level,
+        model.quality_level,
+        model.logo_url,
+        benchmarks.swe_bench || 0,
+        benchmarks.arc_agi || 0,
+        benchmarks.gpqa || 0,
+        benchmarks.mmlu || 0
+      );
     }
   }
 

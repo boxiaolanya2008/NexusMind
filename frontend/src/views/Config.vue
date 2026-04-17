@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <!-- 顶部导航栏 -->
     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -15,7 +14,6 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- API密钥信息 -->
       <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in border border-gray-200/50 dark:border-gray-700/50">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +61,6 @@
         </div>
       </div>
 
-      <!-- 配置选项卡 -->
       <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in border border-gray-200/50 dark:border-gray-700/50">
         <div class="flex space-x-4 border-b border-gray-200 dark:border-gray-700 mb-6">
           <button
@@ -89,7 +86,6 @@
           </button>
         </div>
 
-        <!-- Anthropic配置 -->
         <div v-if="activeTab === 'anthropic'" class="space-y-4">
           <div>
             <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-3">{{ t('config.envVarConfig') }}</h3>
@@ -123,7 +119,6 @@ print(message.content)</code></pre>
           </div>
         </div>
 
-        <!-- OpenAI兼容配置 -->
         <div v-if="activeTab === 'openai'" class="space-y-4">
           <div>
             <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-3">{{ t('config.envVarConfig') }}</h3>
@@ -165,7 +160,6 @@ OPENAI_BASE_URL={{ apiEndpoint }}/v1</code></pre>
           </div>
         </div>
 
-        <!-- Python SDK配置 -->
         <div v-if="activeTab === 'python'" class="space-y-4">
           <div>
             <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-3">{{ t('config.installOpenaiSdk') }}</h3>
@@ -197,7 +191,6 @@ print(response.choices[<span class="text-blue-400">0</span>].message.content)</c
         </div>
       </div>
 
-      <!-- 下载配置文件 -->
       <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 animate-fade-in border border-gray-200/50 dark:border-gray-700/50">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -6,7 +6,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import('../views/Home.vue'),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, preload: true }
   },
   {
     path: '/login',
@@ -36,7 +36,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, preload: true }
   },
   {
     path: '/admin',
@@ -49,13 +49,33 @@ const routes = [
     name: 'ModelDetail',
     component: () => import('../views/ModelDetail.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: () => import('../views/Chat.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0, behavior: 'smooth' }
+    }
+  }
 })
+
+function preloadRoutes() {
+  const criticalRoutes = routes.filter(route => route.meta.preload)
+  criticalRoutes.forEach(route => {
+    route.component()
+  })
+}
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
@@ -66,6 +86,16 @@ router.beforeEach((to, from, next) => {
     next('/dashboard')
   } else {
     next()
+  }
+})
+
+router.isReady().then(() => {
+  if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(preloadRoutes)
+    } else {
+      setTimeout(preloadRoutes, 1000)
+    }
   }
 })
 

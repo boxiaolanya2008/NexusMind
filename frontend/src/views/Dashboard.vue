@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <!-- 顶部导航栏 -->
     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -26,7 +25,6 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <!-- 统计卡片 -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-200/50 dark:border-gray-700/50">
           <div class="flex items-center justify-between">
@@ -85,11 +83,8 @@
         </div>
       </div>
 
-      <!-- 主要内容区域 -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- 左侧：API密钥和使用趋势 -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- API密钥卡片 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +116,6 @@
             </p>
           </div>
 
-          <!-- 使用趋势图表 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +126,6 @@
             <div ref="trendChart" class="h-72"></div>
           </div>
 
-          <!-- 模型消耗统计 -->
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +166,6 @@
           </div>
         </div>
 
-        <!-- 右侧：模型列表 -->
         <div class="space-y-6">
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50">
             <div class="flex items-center justify-between mb-4">
@@ -224,7 +216,6 @@
             </div>
           </div>
 
-          <!-- 快捷操作 -->
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">快捷操作</h3>
             <div class="space-y-2">
@@ -263,7 +254,6 @@
       </div>
     </div>
 
-    <!-- 充值对话框 -->
     <el-dialog v-model="showRechargeDialog" title="账户充值" width="400px">
       <div class="space-y-4">
         <div>
@@ -301,7 +291,6 @@
       </template>
     </el-dialog>
 
-    <!-- API密钥管理对话框 -->
     <el-dialog v-model="showApiKeyDialog" title="API密钥管理" width="500px">
       <div class="space-y-4">
         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded">

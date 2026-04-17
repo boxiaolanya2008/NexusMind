@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <!-- 顶部导航栏 -->
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -15,7 +14,6 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- 快速开始 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,7 +40,6 @@
         </div>
       </div>
 
-      <!-- 认证 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-6 h-6 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +58,6 @@
         </p>
       </div>
 
-      <!-- 聊天完成 API -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-6 h-6 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +74,6 @@
           <p class="text-gray-600 dark:text-gray-400 text-sm">创建聊天完成请求，这是最常用的 API 端点。</p>
         </div>
 
-        <!-- 请求示例 -->
         <div class="mb-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">请求示例</h3>
           <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
@@ -96,7 +91,6 @@
           </div>
         </div>
 
-        <!-- 响应示例 -->
         <div class="mb-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">响应示例</h3>
           <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
@@ -124,7 +118,6 @@
           </div>
         </div>
 
-        <!-- 参数说明 -->
         <div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">请求参数</h3>
           <div class="overflow-x-auto">
@@ -168,7 +161,6 @@
         </div>
       </div>
 
-      <!-- 代码示例 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-6 h-6 mr-2 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,7 +170,6 @@
         </h2>
         
         <div class="space-y-6">
-          <!-- Python -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Python</h3>
             <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
@@ -203,7 +194,6 @@ print(result['choices'][0]['message']['content'])</code></pre>
             </div>
           </div>
 
-          <!-- JavaScript -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">JavaScript</h3>
             <div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
@@ -224,7 +214,6 @@ console.log(data.choices[0].message.content);</code></pre>
             </div>
           </div>
 
-          <!-- cURL -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">cURL</h3>
             <div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
@@ -240,7 +229,6 @@ console.log(data.choices[0].message.content);</code></pre>
         </div>
       </div>
 
-      <!-- 错误处理 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
           <svg class="w-6 h-6 mr-2 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
