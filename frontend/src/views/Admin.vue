@@ -1,155 +1,195 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">管理后台</h1>
-      
-      <div class="mb-6">
-        <button
-          @click="activeTab = 'users'"
-          :class="activeTab === 'users' ? 'bg-gray-900 dark:bg-gray-700 text-white' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'"
-          class="px-4 py-2 mr-2 border border-gray-200 dark:border-gray-700"
-        >
-          用户管理
+  <div class="min-h-screen bg-main selection:bg-primary selection:text-white">
+    <!-- Header: Consistent with Dashboard -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-border py-4">
+      <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center depth-2">
+            <ShieldCheckIcon class="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 class="text-xl font-black tracking-tight leading-none mb-1">{{ $t('admin.title') }}</h1>
+            <p class="text-xs font-bold uppercase tracking-widest opacity-40">{{ $t('admin.subtitle') }}</p>
+          </div>
+        </div>
+        <button @click="goToDashboard" class="glass-panel px-6 py-2.5 rounded-xl font-bold text-sm interactive-scale border-border hover:bg-main/80">
+          {{ $t('common.backToConsole') }}
         </button>
-        <button
-          @click="activeTab = 'models'"
-          :class="activeTab === 'models' ? 'bg-gray-900 dark:bg-gray-700 text-white' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'"
-          class="px-4 py-2 mr-2 border border-gray-200 dark:border-gray-700"
-        >
-          模型管理
-        </button>
-        <button
-          @click="activeTab = 'stats'"
-          :class="activeTab === 'stats' ? 'bg-gray-900 dark:bg-gray-700 text-white' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'"
-          class="px-4 py-2 border border-gray-200 dark:border-gray-700"
-        >
-          统计
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+      <!-- Tabs -->
+      <div class="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <button v-for="tab in ['users', 'models', 'stats']" :key="tab"
+          @click="activeTab = tab"
+          :class="['px-6 py-3 rounded-2xl font-bold text-sm capitalize tracking-wider transition-all interactive-scale',
+            activeTab === tab ? 'bg-primary text-white depth-2 shadow-blue-500/20 shadow-lg' : 'glass-panel text-muted hover:bg-main/50'
+          ]">
+          {{ $t(`admin.${tab}Mgmt`) }}
         </button>
       </div>
       
-      <div v-if="activeTab === 'users'" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">用户管理</h3>
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">ID</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">用户名</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">邮箱</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">余额</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">角色</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id" class="border-b border-gray-200 dark:border-gray-700">
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ user.id }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ user.username }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ user.email || '-' }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">${{ user.balance?.toFixed(2) || '0.00' }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ user.role }}</td>
-              <td class="py-2 px-4">
-                <button @click="addBalance(user)" class="text-blue-600 dark:text-blue-400 mr-2">添加余额</button>
-                <button @click="deleteUser(user)" class="text-red-600 dark:text-red-400">删除</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Users Tab -->
+      <div v-if="activeTab === 'users'" class="glass-panel p-10 rounded-[40px] depth-2 animate-fade-in">
+        <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
+          <UserGroupIcon class="w-6 h-6 text-primary" />
+          {{ $t('admin.usersDirectory') }}
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="text-left border-b border-border pb-4">
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.id') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.username') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.email') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.balance') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.role') }}</th>
+                <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.actions') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+              <tr v-for="user in users" :key="user.id" class="group hover:bg-primary/[0.02] transition-colors">
+                <td class="py-6 font-mono text-sm opacity-50">{{ user.id }}</td>
+                <td class="py-6 font-bold">{{ user.username }}</td>
+                <td class="py-6 text-sm text-muted">{{ user.email || '—' }}</td>
+                <td class="py-6 font-mono font-bold text-emerald-500">${{ user.balance?.toFixed(2) || '0.00' }}</td>
+                <td class="py-6">
+                  <span :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest', user.role === 'admin' ? 'bg-primary/10 text-primary' : 'bg-main border border-border text-muted']">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td class="py-6 text-right space-x-3">
+                  <button @click="addBalance(user)" class="text-xs font-bold text-primary hover:underline">{{ $t('admin.addBalance') }}</button>
+                  <button @click="deleteUser(user)" class="text-xs font-bold text-rose-500 hover:underline">{{ $t('admin.delete') }}</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       
-      <div v-if="activeTab === 'models'" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">模型管理</h3>
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">ID</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">名称</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">显示名称</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">智商</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">质量</th>
-              <th class="text-left py-2 px-4 text-gray-900 dark:text-white">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="model in models" :key="model.id" class="border-b border-gray-200 dark:border-gray-700">
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ model.id }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ model.name }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ model.display_name }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ model.intelligence_level }}</td>
-              <td class="py-2 px-4 text-gray-900 dark:text-white">{{ model.quality_level }}</td>
-              <td class="py-2 px-4">
-                <button @click="editModelIntelligence(model)" class="text-blue-600 dark:text-blue-400">编辑智商</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Models Tab -->
+      <div v-if="activeTab === 'models'" class="glass-panel p-10 rounded-[40px] depth-2 animate-fade-in">
+        <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
+          <CpuChipIcon class="w-6 h-6 text-primary" />
+          {{ $t('admin.modelEcosystem') }}
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="text-left border-b border-border pb-4">
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.id') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.apiName') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.displayName') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.intelligence') }}</th>
+                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.quality') }}</th>
+                <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.actions') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+              <tr v-for="model in models" :key="model.id" class="group hover:bg-primary/[0.02] transition-colors">
+                <td class="py-6 font-mono text-sm opacity-50">{{ model.id }}</td>
+                <td class="py-6 font-mono text-sm font-bold">{{ model.name }}</td>
+                <td class="py-6 font-bold">{{ model.display_name }}</td>
+                <td class="py-6">
+                  <div class="flex items-center gap-2">
+                    <div class="w-16 h-2 bg-main border border-border rounded-full overflow-hidden">
+                      <div class="h-full bg-primary" :style="{ width: `${model.intelligence_level}%` }"></div>
+                    </div>
+                    <span class="text-xs font-bold">{{ model.intelligence_level }}</span>
+                  </div>
+                </td>
+                <td class="py-6">
+                  <span class="px-3 py-1 bg-main border border-border rounded-full text-[10px] font-black uppercase tracking-widest text-muted">
+                    {{ model.quality_level }}
+                  </span>
+                </td>
+                <td class="py-6 text-right">
+                  <button @click="editModelIntelligence(model)" class="text-xs font-bold text-primary hover:underline">{{ $t('admin.editTuning') }}</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       
-      <div v-if="activeTab === 'stats'" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">统计</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div class="border border-gray-200 dark:border-gray-700 p-6">
-            <p class="text-gray-600 dark:text-gray-400">总用户数</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.totalUsers }}</p>
+      <!-- Stats Tab -->
+      <div v-if="activeTab === 'stats'" class="animate-fade-in space-y-8">
+        <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+          <ChartBarIcon class="w-6 h-6 text-primary" />
+          {{ $t('admin.platformAnalytics') }}
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.totalUsers') }}</p>
+            <p class="text-4xl font-mono font-black text-primary">{{ stats.totalUsers }}</p>
           </div>
-          <div class="border border-gray-200 dark:border-gray-700 p-6">
-            <p class="text-gray-600 dark:text-gray-400">总请求数</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.totalRequests }}</p>
+          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.totalRequests') }}</p>
+            <p class="text-4xl font-mono font-black text-indigo-500">{{ stats.totalRequests }}</p>
           </div>
-          <div class="border border-gray-200 dark:border-gray-700 p-6">
-            <p class="text-gray-600 dark:text-gray-400">总收入</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">${{ stats.totalRevenue?.toFixed(2) }}</p>
+          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.totalRevenue') }}</p>
+            <p class="text-4xl font-mono font-black text-emerald-500">${{ stats.totalRevenue?.toFixed(2) }}</p>
           </div>
-          <div class="border border-gray-200 dark:border-gray-700 p-6">
-            <p class="text-gray-600 dark:text-gray-400">近期成本</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">${{ stats.recentCost?.toFixed(2) }}</p>
+          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.recentCost') }}</p>
+            <p class="text-4xl font-mono font-black text-rose-500">${{ stats.recentCost?.toFixed(2) }}</p>
           </div>
         </div>
       </div>
-    </div>
+    </main>
     
-    <div v-if="balanceDialogVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white dark:bg-gray-800 p-6 rounded w-96">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">添加余额</h3>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">金额</label>
-            <input v-model.number="balanceForm.amount" type="number" class="w-full border border-gray-300 dark:border-gray-600 rounded px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">描述</label>
-            <input v-model="balanceForm.description" class="w-full border border-gray-300 dark:border-gray-600 rounded px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
-          </div>
+    <!-- Balance Dialog -->
+    <el-dialog v-model="balanceDialogVisible" width="400px" custom-class="glass-panel !rounded-[32px] !border-none !p-0" :show-close="false">
+      <div class="p-8 pt-8 space-y-6">
+        <h3 class="text-xl font-bold mb-4">{{ $t('admin.addBalance') }}</h3>
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest opacity-40 mb-3">{{ $t('admin.amountUsd') }}</label>
+          <input v-model.number="balanceForm.amount" type="number"
+            class="w-full bg-main border border-border rounded-2xl px-6 py-4 font-mono font-bold text-xl focus:outline-none focus:border-primary" />
         </div>
-        <div class="flex justify-end mt-6 space-x-2">
-          <button @click="balanceDialogVisible = false" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded">取消</button>
-          <button @click="confirmAddBalance" class="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded">确认</button>
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest opacity-40 mb-3">{{ $t('admin.description') }}</label>
+          <input v-model="balanceForm.description" type="text"
+            class="w-full bg-main border border-border rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-primary" />
         </div>
       </div>
-    </div>
+      <template #footer>
+        <div class="px-8 pb-8 flex gap-4">
+          <button @click="balanceDialogVisible = false" class="flex-1 py-4 font-bold text-sm opacity-50 hover:opacity-100 transition-opacity">{{ $t('admin.cancel') }}</button>
+          <button @click="confirmAddBalance" class="flex-[2] bg-primary text-white py-4 rounded-2xl font-bold text-sm interactive-scale depth-2">{{ $t('admin.confirmAdd') }}</button>
+        </div>
+      </template>
+    </el-dialog>
     
-    <div v-if="intelligenceDialogVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white dark:bg-gray-800 p-6 rounded w-96">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">编辑模型智商</h3>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">智商等级 (0-100)</label>
-            <input v-model.number="intelligenceForm.intelligenceLevel" type="number" min="0" max="100" class="w-full border border-gray-300 dark:border-gray-600 rounded px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">质量等级</label>
-            <select v-model="intelligenceForm.qualityLevel" class="w-full border border-gray-300 dark:border-gray-600 rounded px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-              <option value="low">低</option>
-              <option value="medium">中</option>
-              <option value="high">高</option>
-            </select>
-          </div>
+    <!-- Intelligence Dialog -->
+    <el-dialog v-model="intelligenceDialogVisible" width="400px" custom-class="glass-panel !rounded-[32px] !border-none !p-0" :show-close="false">
+      <div class="p-8 pt-8 space-y-6">
+        <h3 class="text-xl font-bold mb-4">{{ $t('admin.editTuning') }}</h3>
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest opacity-40 mb-3">{{ $t('admin.intelLevel') }}</label>
+          <input v-model.number="intelligenceForm.intelligenceLevel" type="number" min="0" max="100"
+            class="w-full bg-main border border-border rounded-2xl px-6 py-4 font-mono font-bold text-xl focus:outline-none focus:border-primary" />
         </div>
-        <div class="flex justify-end mt-6 space-x-2">
-          <button @click="intelligenceDialogVisible = false" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded">取消</button>
-          <button @click="confirmEditIntelligence" class="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded">确认</button>
+        <div>
+          <label class="block text-xs font-black uppercase tracking-widest opacity-40 mb-3">{{ $t('admin.qualityLevel') }}</label>
+          <select v-model="intelligenceForm.qualityLevel"
+            class="w-full bg-main border border-border rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-primary appearance-none">
+            <option value="low">{{ $t('admin.low') }}</option>
+            <option value="medium">{{ $t('admin.medium') }}</option>
+            <option value="high">{{ $t('admin.high') }}</option>
+          </select>
         </div>
       </div>
-    </div>
+      <template #footer>
+        <div class="px-8 pb-8 flex gap-4">
+          <button @click="intelligenceDialogVisible = false" class="flex-1 py-4 font-bold text-sm opacity-50 hover:opacity-100 transition-opacity">{{ $t('admin.cancel') }}</button>
+          <button @click="confirmEditIntelligence" class="flex-[2] bg-primary text-white py-4 rounded-2xl font-bold text-sm interactive-scale depth-2">{{ $t('admin.saveTuning') }}</button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -158,14 +198,18 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useModelsStore } from '../stores/models'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
+
+import { ShieldCheckIcon, UserGroupIcon, CpuChipIcon, ChartBarIcon } from '@heroicons/vue/24/outline'
 
 const API_BASE = 'http://localhost:3000/api'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const modelsStore = useModelsStore()
+const { t } = useI18n()
 
 const activeTab = ref('users')
 const users = ref([])
@@ -194,7 +238,7 @@ async function fetchUsers() {
     })
     users.value = response.data
   } catch (error) {
-    ElMessage.error('获取用户列表失败')
+    ElMessage.error(t('admin.fetchUsersFailed'))
   }
 }
 
@@ -206,13 +250,8 @@ async function fetchStats() {
     })
     stats.value = response.data
   } catch (error) {
-    ElMessage.error('获取统计数据失败')
+    ElMessage.error(t('admin.fetchStatsFailed'))
   }
-}
-
-function handleLogout() {
-  authStore.logout()
-  router.push('/')
 }
 
 function goToDashboard() {
@@ -237,28 +276,29 @@ async function confirmAddBalance() {
     }, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    ElMessage.success('余额添加成功')
+    ElMessage.success(t('admin.balanceAdded'))
     balanceDialogVisible.value = false
     await fetchUsers()
   } catch (error) {
-    ElMessage.error('添加余额失败')
+    ElMessage.error(t('admin.addBalanceFailed'))
   }
 }
 
 async function deleteUser(user) {
   try {
-    await ElMessageBox.confirm('确定要删除此用户吗？', '警告', {
-      type: 'warning'
+    await ElMessageBox.confirm(t('admin.deleteConfirm'), t('admin.warning'), {
+      type: 'warning',
+      customClass: 'glass-panel !rounded-[32px] !border-none'
     })
     const token = authStore.token
     await axios.delete(`${API_BASE}/admin/users/${user.id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    ElMessage.success('用户删除成功')
+    ElMessage.success(t('admin.userDeleted'))
     await fetchUsers()
   } catch (error) {
     if (error !== 'cancel') {
-      ElMessage.error('删除用户失败')
+      ElMessage.error(t('admin.deleteUserFailed'))
     }
   }
 }
@@ -281,11 +321,21 @@ async function confirmEditIntelligence() {
     }, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    ElMessage.success('模型智商更新成功')
+    ElMessage.success(t('admin.tuningUpdated'))
     intelligenceDialogVisible.value = false
     await modelsStore.fetchModels()
   } catch (error) {
-    ElMessage.error('更新模型智商失败')
+    ElMessage.error(t('admin.updateTuningFailed'))
   }
 }
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+</style>

@@ -1,281 +1,158 @@
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <h1 class="text-xl font-bold text-gray-900 dark:text-white">API 文档</h1>
+  <div class="min-h-screen bg-main selection:bg-primary selection:text-white pb-24">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-border py-4">
+      <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center depth-2">
+            <DocumentTextIcon class="w-6 h-6 text-white" />
           </div>
-          <div class="flex items-center space-x-2">
-            <span class="text-sm text-gray-600 dark:text-gray-400">v1.0</span>
+          <div>
+            <h1 class="text-xl font-black tracking-tight leading-none mb-1">{{ $t('apiDocs.title') }}</h1>
+            <p class="text-xs font-bold uppercase tracking-widest opacity-40">{{ $t('apiDocs.subtitle') }}</p>
           </div>
         </div>
+        <button @click="router.push('/dashboard')" class="glass-panel px-6 py-2.5 rounded-xl font-bold text-sm interactive-scale border-border hover:bg-main/80">
+          {{ $t('dashboard.console') }}
+        </button>
       </div>
-    </div>
+    </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-          <svg class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          快速开始
+    <main class="max-w-4xl mx-auto px-6 mt-12 space-y-12">
+      <!-- Intro Section -->
+      <section class="glass-panel p-10 rounded-[40px] depth-2 relative overflow-hidden">
+        <div class="absolute top-[-10%] right-[-10%] w-[30%] h-[50%] bg-blue-500/10 blur-[80px] rounded-full pointer-events-none animate-float"></div>
+        <h2 class="text-3xl font-black mb-4 flex items-center gap-3">
+          <RocketLaunchIcon class="w-8 h-8 text-primary" />
+          {{ $t('apiDocs.quickstart') }}
         </h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          NexusMind API 兼容 OpenAI API 格式，您可以轻松地将现有的 OpenAI 集成迁移到 NexusMind。
+        <p class="text-muted text-lg mb-8 max-w-2xl">
+          {{ $t('apiDocs.quickstartDesc') }}
         </p>
         
-        <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border border-blue-200 dark:border-blue-700 rounded-xl p-4 mb-6">
-          <h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">API 基础信息</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex">
-              <span class="text-gray-600 dark:text-gray-400 w-32">基础 URL:</span>
-              <code class="text-blue-700 dark:text-blue-300 bg-white dark:bg-gray-900 px-2 py-1 rounded border border-blue-300 dark:border-blue-600">http://localhost:3000/api</code>
-            </div>
-            <div class="flex">
-              <span class="text-gray-600 dark:text-gray-400 w-32">认证方式:</span>
-              <code class="text-blue-700 dark:text-blue-300 bg-white dark:bg-gray-900 px-2 py-1 rounded border border-blue-300 dark:border-blue-600">X-API-Key</code>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-main/50 border border-border p-6 rounded-3xl animate-bg-linear hover:bg-primary/[0.02]">
+            <p class="text-[10px] font-black uppercase tracking-widest text-muted mb-2">{{ $t('apiDocs.baseUrl') }}</p>
+            <code class="font-mono font-bold text-primary">http://localhost:3000/api/v1</code>
+          </div>
+          <div class="bg-main/50 border border-border p-6 rounded-3xl hover:bg-primary/[0.02]">
+            <p class="text-[10px] font-black uppercase tracking-widest text-muted mb-2">{{ $t('apiDocs.authentication') }}</p>
+            <code class="font-mono font-bold text-primary">X-API-Key</code>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-          <svg class="w-6 h-6 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
-          认证
-        </h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">所有 API 请求都需要在请求头中包含您的 API 密钥。</p>
-        
-        <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
-          <pre><code class="text-sm text-gray-100">X-API-Key: your-api-key-here</code></pre>
-        </div>
-        
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
-          您可以在控制台的仪表盘页面获取您的 API 密钥。
-        </p>
-      </div>
-
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-          <svg class="w-6 h-6 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-          聊天完成 API
-        </h2>
-        
-        <div class="mb-6">
-          <div class="flex items-center space-x-2 mb-2">
-            <span class="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">POST</span>
-            <code class="text-gray-700 dark:text-gray-300 font-mono">/api/v1/chat/completions</code>
-          </div>
-          <p class="text-gray-600 dark:text-gray-400 text-sm">创建聊天完成请求，这是最常用的 API 端点。</p>
-        </div>
-
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">请求示例</h3>
-          <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
-            <pre><code class="text-sm text-gray-100">{
-  "model": "gpt-4-turbo",
-  "messages": [
-    {
-      "role": "user",
-      "content": "Hello, how are you?"
-    }
-  ],
-  "temperature": 0.7,
-  "max_tokens": 1000
-}</code></pre>
+      <!-- Endpoint Section -->
+      <section class="glass-panel p-10 rounded-[40px] depth-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <h2 class="text-3xl font-black flex items-center gap-3">
+            <ChatBubbleBottomCenterTextIcon class="w-8 h-8 text-indigo-500" />
+            {{ $t('apiDocs.chatCompletions') }}
+          </h2>
+          <div class="inline-flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl">
+            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500">POST</span>
+            <code class="font-mono text-sm font-bold text-emerald-500">/chat/completions</code>
           </div>
         </div>
 
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">响应示例</h3>
-          <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
-            <pre><code class="text-sm text-gray-100">{
-  "id": "chatcmpl-abc123",
-  "object": "chat.completion",
-  "created": 1234567890,
-  "model": "gpt-4-turbo",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "I'm doing well, thank you!"
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 10,
-    "completion_tokens": 8,
-    "total_tokens": 18
-  }
-}</code></pre>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">请求参数</h3>
-          <div class="overflow-x-auto">
-            <table class="min-w-full">
-              <thead>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <th class="text-left py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">参数</th>
-                  <th class="text-left py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">类型</th>
-                  <th class="text-left py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">必填</th>
-                  <th class="text-left py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">说明</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <td class="py-2 px-4"><code class="text-sm text-blue-600 dark:text-blue-400">model</code></td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">string</td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">是</td>
-                  <td class="py-2 px-4 text-gray-600 dark:text-gray-400 text-sm">要使用的模型 ID</td>
-                </tr>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <td class="py-2 px-4"><code class="text-sm text-blue-600 dark:text-blue-400">messages</code></td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">array</td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">是</td>
-                  <td class="py-2 px-4 text-gray-600 dark:text-gray-400 text-sm">消息列表</td>
-                </tr>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <td class="py-2 px-4"><code class="text-sm text-blue-600 dark:text-blue-400">temperature</code></td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">number</td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">否</td>
-                  <td class="py-2 px-4 text-gray-600 dark:text-gray-400 text-sm">采样温度，0-2 之间</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-4"><code class="text-sm text-blue-600 dark:text-blue-400">max_tokens</code></td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">integer</td>
-                  <td class="py-2 px-4 text-gray-900 dark:text-white text-sm">否</td>
-                  <td class="py-2 px-4 text-gray-600 dark:text-gray-400 text-sm">最大生成 token 数</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-          <svg class="w-6 h-6 mr-2 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-          </svg>
-          代码示例
-        </h2>
-        
-        <div class="space-y-6">
+        <div class="space-y-8">
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Python</h3>
-            <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-4 overflow-x-auto">
-              <pre><code class="text-sm text-gray-100">import requests
-
-response = requests.post(
-    'http://localhost:3000/api/v1/chat/completions',
-    headers={
-        'Content-Type': 'application/json',
-        'X-API-Key': 'your-api-key'
-    },
-    json={
-        'model': 'gpt-4-turbo',
-        'messages': [
-            {'role': 'user', 'content': 'Hello!'}
-        ]
-    }
-)
-
-result = response.json()
-print(result['choices'][0]['message']['content'])</code></pre>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">JavaScript</h3>
-            <div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
-              <pre><code class="text-sm text-gray-100">const response = await fetch('http://localhost:3000/api/v1/chat/completions', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-API-Key': 'your-api-key'
-  },
-  body: JSON.stringify({
-    model: 'gpt-4-turbo',
-    messages: [{ role: 'user', content: 'Hello!' }]
-  })
-});
-
-const data = await response.json();
-console.log(data.choices[0].message.content);</code></pre>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">cURL</h3>
-            <div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
-              <pre><code class="text-sm text-gray-100">curl -X POST http://localhost:3000/api/v1/chat/completions \
+            <h3 class="text-sm font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('apiDocs.requestExample') }}</h3>
+            <div class="bg-gray-900 rounded-3xl p-6 overflow-x-auto relative group">
+              <button class="absolute top-4 right-4 p-2 text-gray-400 hover:text-white glass-panel border-gray-700 opacity-0 group-hover:opacity-100 transition-all rounded-xl">
+                <ClipboardIcon class="w-4 h-4" />
+              </button>
+              <pre><code class="text-sm font-mono text-gray-300">curl -X POST http://localhost:3000/api/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: your-api-key" \
+  -H "X-API-Key: $YOUR_API_KEY" \
   -d '{
     "model": "gpt-4-turbo",
-    "messages": [{"role": "user", "content": "Hello!"}]
+    "messages": [
+      {"role": "user", "content": "Hello, world!"}
+    ]
   }'</code></pre>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 animate-fade-in">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-          <svg class="w-6 h-6 mr-2 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-          </svg>
-          错误处理
+          <div>
+            <h3 class="text-sm font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('apiDocs.parameters') }}</h3>
+            <div class="bg-main/30 border border-border rounded-3xl overflow-hidden">
+              <table class="w-full border-collapse">
+                <tbody class="divide-y divide-border">
+                  <tr class="group hover:bg-main/50 transition-colors">
+                    <td class="p-6 align-top w-1/4">
+                      <code class="font-mono font-bold text-primary">{{ $t('apiDocs.model') }}</code>
+                      <span class="block text-[10px] font-black uppercase tracking-widest text-rose-500 mt-1">{{ $t('apiDocs.required') }}</span>
+                    </td>
+                    <td class="p-6">
+                      <p class="text-sm text-muted">{{ $t('apiDocs.modelDesc') }}</p>
+                    </td>
+                  </tr>
+                  <tr class="group hover:bg-main/50 transition-colors">
+                    <td class="p-6 align-top w-1/4">
+                      <code class="font-mono font-bold text-primary">{{ $t('apiDocs.messages') }}</code>
+                      <span class="block text-[10px] font-black uppercase tracking-widest text-rose-500 mt-1">{{ $t('apiDocs.required') }}</span>
+                    </td>
+                    <td class="p-6">
+                      <p class="text-sm text-muted">{{ $t('apiDocs.messagesDesc') }}</p>
+                    </td>
+                  </tr>
+                  <tr class="group hover:bg-main/50 transition-colors">
+                    <td class="p-6 align-top w-1/4">
+                      <code class="font-mono font-bold text-primary">{{ $t('apiDocs.temperature') }}</code>
+                    </td>
+                    <td class="p-6">
+                      <p class="text-sm text-muted">{{ $t('apiDocs.temperatureDesc') }}</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Error Codes -->
+      <section class="glass-panel p-10 rounded-[40px] depth-2">
+        <h2 class="text-3xl font-black mb-8 flex items-center gap-3">
+          <ShieldExclamationIcon class="w-8 h-8 text-rose-500" />
+          {{ $t('apiDocs.errorHandling') }}
         </h2>
         
-        <div class="space-y-4">
-          <div class="border-l-4 border-red-500 pl-4 bg-red-50 dark:bg-red-900/20 py-3 rounded-r-lg">
-            <h4 class="font-semibold text-red-900 dark:text-red-100">401 Unauthorized</h4>
-            <p class="text-red-700 dark:text-red-300 text-sm">API 密钥无效或缺失</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-rose-500/10 border border-rose-500/20 p-6 rounded-3xl interactive-scale hover:shadow-lg transition-all">
+            <h4 class="font-mono font-bold text-rose-500 text-xl mb-2">{{ $t('apiDocs.err401') }}</h4>
+            <p class="text-sm text-rose-500/80">{{ $t('apiDocs.err401Desc') }}</p>
           </div>
-          <div class="border-l-4 border-yellow-500 pl-4 bg-yellow-50 dark:bg-yellow-900/20 py-3 rounded-r-lg">
-            <h4 class="font-semibold text-yellow-900 dark:text-yellow-100">402 Payment Required</h4>
-            <p class="text-yellow-700 dark:text-yellow-300 text-sm">账户余额不足以完成请求</p>
+          <div class="bg-amber-500/10 border border-amber-500/20 p-6 rounded-3xl interactive-scale hover:shadow-lg transition-all">
+            <h4 class="font-mono font-bold text-amber-500 text-xl mb-2">{{ $t('apiDocs.err402') }}</h4>
+            <p class="text-sm text-amber-500/80">{{ $t('apiDocs.err402Desc') }}</p>
           </div>
-          <div class="border-l-4 border-orange-500 pl-4 bg-orange-50 dark:bg-orange-900/20 py-3 rounded-r-lg">
-            <h4 class="font-semibold text-orange-900 dark:text-orange-100">429 Too Many Requests</h4>
-            <p class="text-orange-700 dark:text-orange-300 text-sm">请求速率超过限制</p>
+          <div class="bg-indigo-500/10 border border-indigo-500/20 p-6 rounded-3xl interactive-scale hover:shadow-lg transition-all">
+            <h4 class="font-mono font-bold text-indigo-500 text-xl mb-2">{{ $t('apiDocs.err429') }}</h4>
+            <p class="text-sm text-indigo-500/80">{{ $t('apiDocs.err429Desc') }}</p>
           </div>
-          <div class="border-l-4 border-red-500 pl-4 bg-red-50 dark:bg-red-900/20 py-3 rounded-r-lg">
-            <h4 class="font-semibold text-red-900 dark:text-red-100">404 Not Found</h4>
-            <p class="text-red-700 dark:text-red-300 text-sm">请求的模型不存在</p>
+          <div class="bg-slate-500/10 border border-slate-500/20 p-6 rounded-3xl interactive-scale hover:shadow-lg transition-all">
+            <h4 class="font-mono font-bold text-slate-500 text-xl mb-2">{{ $t('apiDocs.err404') }}</h4>
+            <p class="text-sm text-slate-500/80">{{ $t('apiDocs.err404Desc') }}</p>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+import { 
+  DocumentTextIcon, 
+  RocketLaunchIcon, 
+  ChatBubbleBottomCenterTextIcon,
+  ShieldExclamationIcon,
+  ClipboardIcon
+} from '@heroicons/vue/24/outline'
+import { useI18n } from 'vue-i18n'
+
+const router = useRouter()
+const { t } = useI18n()
 </script>
-
-<style scoped>
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out;
-}
-</style>

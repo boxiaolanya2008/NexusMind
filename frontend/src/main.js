@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, watch } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import ElementPlus from 'element-plus'
@@ -12,7 +12,6 @@ import enUS from './locales/en-US.js'
 import { useI18nStore } from './stores/i18n'
 import { FPSMonitor, PerformanceMetrics, rafThrottle, scheduleIdleCallback } from './utils/performance.js'
 
-const app = createApp(App)
 const pinia = createPinia()
 
 const i18n = createI18n({
@@ -25,6 +24,8 @@ const i18n = createI18n({
   }
 })
 
+const app = createApp(App)
+
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
@@ -35,7 +36,11 @@ app.use(i18n)
 app.use(ElementPlus)
 
 const i18nStore = useI18nStore()
-i18n.locale = i18nStore.locale
+i18n.global.locale.value = i18nStore.locale
+
+watch(() => i18nStore.locale, (newLocale) => {
+  i18n.global.locale.value = newLocale
+})
 
 const fpsMonitor = new FPSMonitor()
 const performanceMetrics = new PerformanceMetrics()
