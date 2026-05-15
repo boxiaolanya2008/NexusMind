@@ -1,31 +1,31 @@
 <template>
-  <nav v-if="!isAuthPage" class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50">
+  <nav v-if="!isAuthPage" class="glass-panel border-b border-border sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center space-x-8">
-          <router-link to="/" class="text-xl font-bold text-gray-900 dark:text-white">
+          <router-link to="/" class="text-xl font-black tracking-tight">
             {{ t('common.appName') }}
           </router-link>
           <div class="hidden md:flex space-x-6">
-            <router-link to="/" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <router-link to="/" class="text-muted hover:text-primary px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.home') }}
             </router-link>
-            <router-link to="/api-docs" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <router-link to="/api-docs" class="text-muted hover:text-primary px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.apiDocs') }}
             </router-link>
-            <router-link to="/config" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <router-link to="/config" class="text-muted hover:text-primary px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.config') }}
             </router-link>
-            <router-link to="/admin" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <router-link to="/admin" class="text-muted hover:text-primary px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.admin') }}
             </router-link>
           </div>
         </div>
-        
+
         <div class="flex items-center space-x-4">
           <button
             @click="themeStore.toggleTheme()"
-            class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            class="p-2 text-muted hover:text-primary transition-colors interactive-scale"
             :title="isDark ? t('common.light') : t('common.dark')"
           >
             <svg v-if="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,28 +35,28 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
             </svg>
           </button>
-          
+
           <button
             @click="i18nStore.toggleLocale()"
-            class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm"
+            class="p-2 text-muted hover:text-primary transition-colors interactive-scale text-sm font-bold"
             :title="t('common.language')"
           >
             {{ i18nStore.locale === 'zh-CN' ? 'EN' : '中文' }}
           </button>
-          
+
           <template v-if="authStore.isAuthenticated">
-            <router-link to="/dashboard" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <router-link to="/dashboard" class="text-muted hover:text-primary px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.dashboard') }}
             </router-link>
-            <button @click="handleLogout" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <button @click="handleLogout" class="text-muted hover:text-rose-500 px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.logout') }}
             </button>
           </template>
           <template v-else>
-            <router-link to="/login" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 text-sm">
+            <router-link to="/login" class="text-muted hover:text-primary px-3 py-2 text-sm font-bold transition-colors interactive-scale">
               {{ t('common.login') }}
             </router-link>
-            <router-link to="/register" class="bg-gray-900 dark:bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-800 dark:hover:bg-gray-600">
+            <router-link to="/register" class="bg-primary text-white px-4 py-2 text-sm font-bold rounded-xl depth-2 interactive-scale hover:bg-primary-hover shadow-blue-500/20 shadow-lg transition-all">
               {{ t('common.register') }}
             </router-link>
           </template>

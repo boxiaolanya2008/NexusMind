@@ -3,12 +3,14 @@ import logger from '../utils/logger.js';
 import { getSystemPrompt } from '../utils/systemPrompts.js';
 
 const modelConfigs = new Map();
+let isWatching = false;
 
 export function loadModelConfigs() {
   const sql = 'SELECT model_id, config_key, config_value FROM model_configs';
   const stmt = prepare(sql);
   const configs = stmt.all();
   
+  modelConfigs.clear();
   for (const config of configs) {
     const key = `${config.model_id}:${config.config_key}`;
     modelConfigs.set(key, config.config_value);
@@ -30,7 +32,7 @@ export function updateModelConfig(modelId, configKey, configValue) {
   const stmt = prepare(sql);
   stmt.run();
   
-  logger.info(`Updated config ${configKey} for model ${modelId}`);
+  logger.info(`Updated config ${configKey} for model ${modelId}: ${configValue}`);
 }
 
 export function getModelSystemPrompt(modelId, modelName) {
@@ -44,4 +46,31 @@ export function getModelSystemPrompt(modelId, modelName) {
 export function reloadAllConfigs() {
   loadModelConfigs();
   logger.info('Hot reload: All configurations reloaded');
+}
+
+export function watchModelConfigs() {
+  if (isWatching) return;
+  isWatching = true;
+  
+  const checkInterval = 2000;
+  let lastCount = 0;
+  
+  const check = () => {
+    try {
+      const sql = 'SELECT COUNT(*) as count FROM model_configs';
+      const stmt = prepare(sql);
+      const result = stmt.get();
+      
+      if (result.count !== lastCount) {
+        logger.info('Model configs changed, reloading...');
+        loadModelConfigs();
+        lastCount = result.count;
+      }
+    } catch (error) {
+      logger.error('Error checking model configs:', error);
+    }
+  };
+  
+  setInterval(check, checkInterval);
+  logger.info('Model configs hot reload enabled (polling every 2s)');
 }

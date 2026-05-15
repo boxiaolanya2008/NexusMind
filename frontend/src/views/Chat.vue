@@ -51,11 +51,12 @@
 
       <!-- Header: Mobile & Selection info -->
       <header class="h-16 glass-panel border-b border-border px-6 flex items-center justify-between z-10 shrink-0">
-        <div class="flex items-center gap-4 min-w-0">
+        <div class="flex items-center gap-4 min-w-0 flex-1">
           <button @click="router.push('/dashboard')" class="lg:hidden p-2 glass-panel rounded-xl">
             <ChevronLeftIcon class="w-5 h-5" />
           </button>
-          <div v-if="selectedModel" class="flex flex-col">
+          
+          <div v-if="selectedModel" class="flex flex-col min-w-0 flex-1">
             <p class="font-bold text-sm truncate">{{ selectedModel.display_name }}</p>
             <div class="flex items-center gap-2">
               <span class="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -63,7 +64,37 @@
             </div>
           </div>
         </div>
+        
         <div class="flex items-center gap-4">
+          <div class="relative lg:hidden">
+            <button @click="showMobileModelSelector = !showMobileModelSelector" 
+              class="p-2 glass-panel rounded-xl interactive-scale">
+              <CpuChipIcon class="w-5 h-5" />
+            </button>
+            
+            <div v-if="showMobileModelSelector" 
+              class="absolute right-0 top-12 w-72 glass-panel rounded-2xl depth-2 border-border overflow-hidden z-50 animate-fade-in">
+              <div class="p-4 space-y-2 max-h-80 overflow-y-auto">
+                <div v-for="model in models" :key="model.id" 
+                  @click="selectMobileModel(model)"
+                  :class="[
+                    'p-3 rounded-xl cursor-pointer transition-all interactive-scale',
+                    selectedModel?.id === model.id ? 'bg-primary text-white' : 'hover:bg-main/50'
+                  ]">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-main flex items-center justify-center border border-border">
+                      <img :src="`/logos/${getProviderLogo(model.provider)}`" class="w-5 h-5" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-bold text-sm truncate">{{ model.display_name }}</p>
+                      <p class="text-[10px] uppercase font-black tracking-widest opacity-60">{{ model.provider }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <button @click="clearMessages" class="p-2 text-muted hover:text-rose-500 transition-colors">
             <TrashIcon class="w-5 h-5" />
           </button>
@@ -177,6 +208,7 @@ const loading = ref(false)
 const messages = ref([])
 const inputRef = ref(null)
 const messagesContainer = ref(null)
+const showMobileModelSelector = ref(false)
 
 onMounted(async () => {
   await authStore.fetchProfile()

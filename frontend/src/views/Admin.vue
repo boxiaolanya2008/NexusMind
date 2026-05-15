@@ -19,123 +19,139 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-12">
-      <!-- Tabs -->
-      <div class="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-        <button v-for="tab in ['users', 'models', 'stats']" :key="tab"
-          @click="activeTab = tab"
-          :class="['px-6 py-3 rounded-2xl font-bold text-sm capitalize tracking-wider transition-all interactive-scale',
-            activeTab === tab ? 'bg-primary text-white depth-2 shadow-blue-500/20 shadow-lg' : 'glass-panel text-muted hover:bg-main/50'
-          ]">
-          {{ $t(`admin.${tab}Mgmt`) }}
-        </button>
-      </div>
-      
-      <!-- Users Tab -->
-      <div v-if="activeTab === 'users'" class="glass-panel p-10 rounded-[40px] depth-2 animate-fade-in">
-        <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
-          <UserGroupIcon class="w-6 h-6 text-primary" />
-          {{ $t('admin.usersDirectory') }}
-        </h3>
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse">
-            <thead>
-              <tr class="text-left border-b border-border pb-4">
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.id') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.username') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.email') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.balance') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.role') }}</th>
-                <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.actions') }}</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-border">
-              <tr v-for="user in users" :key="user.id" class="group hover:bg-primary/[0.02] transition-colors">
-                <td class="py-6 font-mono text-sm opacity-50">{{ user.id }}</td>
-                <td class="py-6 font-bold">{{ user.username }}</td>
-                <td class="py-6 text-sm text-muted">{{ user.email || '—' }}</td>
-                <td class="py-6 font-mono font-bold text-emerald-500">${{ user.balance?.toFixed(2) || '0.00' }}</td>
-                <td class="py-6">
-                  <span :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest', user.role === 'admin' ? 'bg-primary/10 text-primary' : 'bg-main border border-border text-muted']">
-                    {{ user.role }}
-                  </span>
-                </td>
-                <td class="py-6 text-right space-x-3">
-                  <button @click="addBalance(user)" class="text-xs font-bold text-primary hover:underline">{{ $t('admin.addBalance') }}</button>
-                  <button @click="deleteUser(user)" class="text-xs font-bold text-rose-500 hover:underline">{{ $t('admin.delete') }}</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Loading Skeleton -->
+      <div v-if="loading" class="animate-fade-in">
+        <div class="flex gap-4 mb-8">
+          <div v-for="i in 3" :key="i" class="h-12 w-32 bg-border rounded-2xl animate-pulse"></div>
+        </div>
+        <div class="glass-panel p-10 rounded-[40px] depth-2">
+          <div class="h-6 w-48 bg-border rounded-full mb-8 animate-pulse"></div>
+          <div class="space-y-4">
+            <div v-for="i in 5" :key="i" class="h-16 w-full bg-border rounded-2xl animate-pulse"></div>
+          </div>
         </div>
       </div>
-      
-      <!-- Models Tab -->
-      <div v-if="activeTab === 'models'" class="glass-panel p-10 rounded-[40px] depth-2 animate-fade-in">
-        <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
-          <CpuChipIcon class="w-6 h-6 text-primary" />
-          {{ $t('admin.modelEcosystem') }}
-        </h3>
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse">
-            <thead>
-              <tr class="text-left border-b border-border pb-4">
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.id') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.apiName') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.displayName') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.intelligence') }}</th>
-                <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.quality') }}</th>
-                <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.actions') }}</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-border">
-              <tr v-for="model in models" :key="model.id" class="group hover:bg-primary/[0.02] transition-colors">
-                <td class="py-6 font-mono text-sm opacity-50">{{ model.id }}</td>
-                <td class="py-6 font-mono text-sm font-bold">{{ model.name }}</td>
-                <td class="py-6 font-bold">{{ model.display_name }}</td>
-                <td class="py-6">
-                  <div class="flex items-center gap-2">
-                    <div class="w-16 h-2 bg-main border border-border rounded-full overflow-hidden">
-                      <div class="h-full bg-primary" :style="{ width: `${model.intelligence_level}%` }"></div>
+
+      <!-- Actual Content -->
+      <div v-else>
+        <!-- Tabs -->
+        <div class="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+          <button v-for="tab in ['users', 'models', 'stats']" :key="tab"
+            @click="activeTab = tab"
+            :class="['px-6 py-3 rounded-2xl font-bold text-sm capitalize tracking-wider transition-all interactive-scale',
+              activeTab === tab ? 'bg-primary text-white depth-2 shadow-blue-500/20 shadow-lg' : 'glass-panel text-muted hover:bg-main/50'
+            ]">
+            {{ t(`admin.${tab}Mgmt`) }}
+          </button>
+        </div>
+        
+        <!-- Users Tab -->
+        <div v-if="activeTab === 'users'" class="glass-panel p-10 rounded-[40px] depth-2 animate-fade-in">
+          <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
+            <UserGroupIcon class="w-6 h-6 text-primary" />
+            {{ $t('admin.usersDirectory') }}
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+              <thead>
+                <tr class="text-left border-b border-border pb-4">
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.id') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.username') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.email') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.balance') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.role') }}</th>
+                  <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.actions') }}</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border">
+                <tr v-for="user in users" :key="user.id" class="group hover:bg-primary/[0.02] transition-colors">
+                  <td class="py-6 font-mono text-sm opacity-50">{{ user.id }}</td>
+                  <td class="py-6 font-bold">{{ user.username }}</td>
+                  <td class="py-6 text-sm text-muted">{{ user.email || '—' }}</td>
+                  <td class="py-6 font-mono font-bold text-emerald-500">${{ user.balance?.toFixed(2) || '0.00' }}</td>
+                  <td class="py-6">
+                    <span :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest', user.role === 'admin' ? 'bg-primary/10 text-primary' : 'bg-main border border-border text-muted']">
+                      {{ user.role }}
+                    </span>
+                  </td>
+                  <td class="py-6 text-right space-x-3">
+                    <button @click="addBalance(user)" class="text-xs font-bold text-primary hover:underline">{{ $t('admin.addBalance') }}</button>
+                    <button @click="deleteUser(user)" class="text-xs font-bold text-rose-500 hover:underline">{{ $t('admin.delete') }}</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Models Tab -->
+        <div v-if="activeTab === 'models'" class="glass-panel p-10 rounded-[40px] depth-2 animate-fade-in">
+          <h3 class="text-2xl font-bold mb-8 flex items-center gap-3">
+            <CpuChipIcon class="w-6 h-6 text-primary" />
+            {{ $t('admin.modelEcosystem') }}
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+              <thead>
+                <tr class="text-left border-b border-border pb-4">
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.id') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.apiName') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.displayName') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.intelligence') }}</th>
+                  <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.quality') }}</th>
+                  <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('admin.actions') }}</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border">
+                <tr v-for="model in models" :key="model.id" class="group hover:bg-primary/[0.02] transition-colors">
+                  <td class="py-6 font-mono text-sm opacity-50">{{ model.id }}</td>
+                  <td class="py-6 font-mono text-sm font-bold">{{ model.name }}</td>
+                  <td class="py-6 font-bold">{{ model.display_name }}</td>
+                  <td class="py-6">
+                    <div class="flex items-center gap-2">
+                      <div class="w-16 h-2 bg-main border border-border rounded-full overflow-hidden">
+                        <div class="h-full bg-primary" :style="{ width: `${model.intelligence_level}%` }"></div>
+                      </div>
+                      <span class="text-xs font-bold">{{ model.intelligence_level }}</span>
                     </div>
-                    <span class="text-xs font-bold">{{ model.intelligence_level }}</span>
-                  </div>
-                </td>
-                <td class="py-6">
-                  <span class="px-3 py-1 bg-main border border-border rounded-full text-[10px] font-black uppercase tracking-widest text-muted">
-                    {{ model.quality_level }}
-                  </span>
-                </td>
-                <td class="py-6 text-right">
-                  <button @click="editModelIntelligence(model)" class="text-xs font-bold text-primary hover:underline">{{ $t('admin.editTuning') }}</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
+                  <td class="py-6">
+                    <span class="px-3 py-1 bg-main border border-border rounded-full text-[10px] font-black uppercase tracking-widest text-muted">
+                      {{ model.quality_level }}
+                    </span>
+                  </td>
+                  <td class="py-6 text-right">
+                    <button @click="editModelIntelligence(model)" class="text-xs font-bold text-primary hover:underline">{{ $t('admin.editTuning') }}</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      
-      <!-- Stats Tab -->
-      <div v-if="activeTab === 'stats'" class="animate-fade-in space-y-8">
-        <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
-          <ChartBarIcon class="w-6 h-6 text-primary" />
-          {{ $t('admin.platformAnalytics') }}
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
-            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.totalUsers') }}</p>
-            <p class="text-4xl font-mono font-black text-primary">{{ stats.totalUsers }}</p>
-          </div>
-          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
-            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.totalRequests') }}</p>
-            <p class="text-4xl font-mono font-black text-indigo-500">{{ stats.totalRequests }}</p>
-          </div>
-          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
-            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.totalRevenue') }}</p>
-            <p class="text-4xl font-mono font-black text-emerald-500">${{ stats.totalRevenue?.toFixed(2) }}</p>
-          </div>
-          <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
-            <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ $t('admin.recentCost') }}</p>
-            <p class="text-4xl font-mono font-black text-rose-500">${{ stats.recentCost?.toFixed(2) }}</p>
+        
+        <!-- Stats Tab -->
+        <div v-if="activeTab === 'stats'" class="animate-fade-in space-y-8">
+          <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+            <ChartBarIcon class="w-6 h-6 text-primary" />
+            {{ t('admin.platformAnalytics') }}
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+              <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ t('admin.totalUsers') }}</p>
+              <p class="text-4xl font-mono font-black text-primary">{{ stats.totalUsers }}</p>
+            </div>
+            <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+              <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ t('admin.totalRequests') }}</p>
+              <p class="text-4xl font-mono font-black text-indigo-500">{{ stats.totalRequests }}</p>
+            </div>
+            <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+              <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ t('admin.totalRevenue') }}</p>
+              <p class="text-4xl font-mono font-black text-emerald-500">${{ stats.totalRevenue?.toFixed(2) }}</p>
+            </div>
+            <div class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all">
+              <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-4">{{ t('admin.recentCost') }}</p>
+              <p class="text-4xl font-mono font-black text-rose-500">${{ stats.recentCost?.toFixed(2) }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -215,6 +231,7 @@ const activeTab = ref('users')
 const users = ref([])
 const models = computed(() => modelsStore.models)
 const stats = ref({ totalUsers: 0, totalRequests: 0, totalRevenue: 0, recentCost: 0 })
+const loading = ref(true)
 
 const balanceDialogVisible = ref(false)
 const balanceForm = reactive({ userId: null, amount: 0, description: '' })
@@ -225,9 +242,14 @@ const intelligenceForm = reactive({ modelId: null, intelligenceLevel: 100, quali
 const selectedModel = ref(null)
 
 onMounted(async () => {
-  await fetchUsers()
-  await modelsStore.fetchModels()
-  await fetchStats()
+  loading.value = true
+  try {
+    await fetchUsers()
+    await modelsStore.fetchModels()
+    await fetchStats()
+  } finally {
+    loading.value = false
+  }
 })
 
 async function fetchUsers() {

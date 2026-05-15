@@ -85,7 +85,7 @@ export class SSEFlushStream extends Transform {
 }
 
 export class TokenBuffer extends Transform {
-  constructor(res, bufferSize = 5) {
+  constructor(res, bufferSize = 1) {
     super({ objectMode: false });
     this.res = res;
     this.bufferSize = bufferSize;

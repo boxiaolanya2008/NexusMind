@@ -12,6 +12,8 @@ export const apiLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  trustProxy: false,
   handler: (req, res) => {
     logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
     res.status(429).json({

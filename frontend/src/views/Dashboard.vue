@@ -29,140 +29,174 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-12">
-      <!-- Top Stats: Precision Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <div v-for="(stat, i) in statCards" :key="i" 
-          class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all group animate-bg-linear">
-          <div class="flex justify-between items-start mb-4">
-            <p class="text-xs font-black uppercase tracking-widest opacity-40">{{ stat.label }}</p>
-            <div :class="`w-10 h-10 rounded-xl flex items-center justify-center ${stat.color} shadow-lg text-white`">
-              <component :is="stat.icon" class="w-5 h-5" />
+      <!-- Loading Skeleton -->
+      <div v-if="loading" class="animate-fade-in">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div v-for="i in 4" :key="i" class="glass-panel p-8 rounded-[32px] depth-1">
+            <div class="h-4 w-24 bg-border rounded-full mb-4 animate-pulse"></div>
+            <div class="h-8 w-32 bg-border rounded-full animate-pulse"></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-8 space-y-12">
+            <div class="glass-panel p-10 rounded-[40px] depth-2">
+              <div class="h-6 w-48 bg-border rounded-full mb-8 animate-pulse"></div>
+              <div class="h-12 w-full bg-border rounded-2xl animate-pulse"></div>
+            </div>
+            <div class="glass-panel p-10 rounded-[40px] depth-2">
+              <div class="h-6 w-48 bg-border rounded-full mb-8 animate-pulse"></div>
+              <div class="h-80 w-full bg-border rounded-2xl animate-pulse"></div>
             </div>
           </div>
-          <p class="text-3xl font-mono font-black">{{ stat.value }}</p>
+          <div class="lg:col-span-4">
+            <div class="glass-panel p-8 rounded-[40px] depth-2">
+              <div class="h-6 w-32 bg-border rounded-full mb-8 animate-pulse"></div>
+              <div v-for="i in 3" :key="i" class="glass-panel p-6 rounded-3xl depth-1 mb-4">
+                <div class="h-4 w-24 bg-border rounded-full mb-4 animate-pulse"></div>
+                <div class="h-3 w-16 bg-border rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <!-- Main Content Area (8 cols) -->
-        <div class="lg:col-span-8 space-y-12">
-          <!-- API Key Area: Interactive Depth -->
-          <section class="glass-panel p-10 rounded-[40px] depth-2 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full"></div>
-            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
-              <KeyIcon class="w-6 h-6 text-primary" />
-              {{ $t('dashboard.apiKeyMgmt') }}
-            </h2>
-            <div class="flex flex-col md:flex-row gap-4">
-              <div class="flex-1 relative">
-                <input :value="apiKey" readonly
-                  class="w-full bg-main/50 border border-border rounded-2xl px-6 py-4 font-mono text-sm focus:outline-none focus:border-primary transition-all pr-12" />
-                <button @click="copyApiKey" class="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors">
-                  <ClipboardIcon class="w-5 h-5" />
-                </button>
-              </div>
-              <button @click="showApiKeyDialog = true" 
-                class="glass-panel px-8 py-4 rounded-2xl font-bold text-sm interactive-scale border-border hover:bg-main/80">
-                {{ $t('dashboard.regenerateKey') }}
-              </button>
-            </div>
-            <p class="text-xs text-muted mt-6 flex items-center gap-2">
-              <ShieldCheckIcon class="w-4 h-4 text-emerald-500" />
-              {{ $t('dashboard.apiKeyWarning') }}
-            </p>
-          </section>
-
-          <!-- Usage Chart: Swiss Style Charting -->
-          <section class="glass-panel p-10 rounded-[40px] depth-2">
-            <div class="flex items-center justify-between mb-10">
-              <h2 class="text-2xl font-bold flex items-center gap-3">
-                <ChartBarIcon class="w-6 h-6 text-primary" />
-                {{ $t('dashboard.usageTrend') }}
-              </h2>
-              <div class="flex gap-2">
-                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">{{ $t('dashboard.thirtyDays') }}</span>
+      <!-- Actual Content -->
+      <div v-else>
+        <!-- Top Stats: Precision Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div v-for="(stat, i) in statCards" :key="i"
+            class="glass-panel p-8 rounded-[32px] depth-1 hover:depth-2 transition-all group animate-bg-linear">
+            <div class="flex justify-between items-start mb-4">
+              <p class="text-xs font-black uppercase tracking-widest opacity-40">{{ stat.label }}</p>
+              <div :class="`w-10 h-10 rounded-xl flex items-center justify-center ${stat.color} shadow-lg text-white`">
+                <component :is="stat.icon" class="w-5 h-5" />
               </div>
             </div>
-            <div ref="trendChart" class="h-80 w-full"></div>
-          </section>
-
-          <!-- Model Table: Minimalist Data -->
-          <section class="glass-panel p-10 rounded-[40px] depth-2 overflow-hidden">
-            <h2 class="text-2xl font-bold mb-8">{{ $t('dashboard.modelConsumption') }}</h2>
-            <div class="overflow-x-auto">
-              <table class="w-full border-collapse">
-                <thead>
-                  <tr class="text-left border-b border-border pb-4">
-                    <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('dashboard.model') }}</th>
-                    <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('dashboard.tokens') }}</th>
-                    <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('dashboard.cost') }}</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                  <tr v-for="model in stats.modelStats" :key="model.model_name" class="group hover:bg-primary/[0.02] transition-colors">
-                    <td class="py-6">
-                      <p class="font-bold text-lg mb-1">{{ model.model_name }}</p>
-                      <p class="text-xs opacity-50 uppercase font-black tracking-tighter">{{ model.provider }}</p>
-                    </td>
-                    <td class="py-6 text-right font-mono font-bold">{{ formatNumber(model.total_tokens) }}</td>
-                    <td class="py-6 text-right font-mono font-bold text-primary">${{ (model.total_cost || 0).toFixed(4) }}</td>
-                  </tr>
-                  <tr v-if="!stats.modelStats?.length">
-                    <td colspan="3" class="py-12 text-center opacity-30 italic font-medium">{{ $t('dashboard.noData') }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+            <p class="text-3xl font-mono font-black">{{ stat.value }}</p>
+          </div>
         </div>
 
-        <!-- Sidebar Area (4 cols) -->
-        <aside class="lg:col-span-4 space-y-8">
-          <!-- Available Models Card -->
-          <section class="glass-panel p-8 rounded-[40px] depth-2 sticky top-28">
-            <div class="flex items-center justify-between mb-8">
-              <h2 class="text-xl font-bold m-0">{{ $t('dashboard.ecosystem') }}</h2>
-              <span class="px-3 py-1 bg-main border border-border rounded-full text-[10px] font-bold uppercase">{{ models.length }} {{ $t('dashboard.active') }}</span>
-            </div>
-            <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-4 scrollbar-hide">
-              <div v-for="model in models" :key="model.id" @click="selectModel(model)"
-                class="glass-panel p-6 rounded-3xl depth-1 border-transparent hover:border-primary/30 transition-all cursor-pointer group interactive-scale">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="w-12 h-12 bg-main rounded-2xl flex items-center justify-center border border-border group-hover:bg-primary/5 transition-colors">
-                    <img :src="`/logos/${getProviderLogo(model.provider)}`" class="w-6 h-6 filter grayscale group-hover:grayscale-0 transition-all" />
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="font-bold truncate">{{ model.display_name }}</p>
-                    <p class="text-[10px] font-black uppercase opacity-40">{{ model.provider }}</p>
-                  </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <!-- Main Content Area (8 cols) -->
+          <div class="lg:col-span-8 space-y-12">
+            <!-- API Key Area: Interactive Depth -->
+            <section class="glass-panel p-10 rounded-[40px] depth-2 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full"></div>
+              <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <KeyIcon class="w-6 h-6 text-primary" />
+                {{ $t('dashboard.apiKeyMgmt') }}
+              </h2>
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                  <input :value="apiKey" readonly
+                    class="w-full bg-main/50 border border-border rounded-2xl px-6 py-4 font-mono text-sm focus:outline-none focus:border-primary transition-all pr-12" />
+                  <button @click="copyApiKey" class="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors">
+                    <ClipboardIcon class="w-5 h-5" />
+                  </button>
                 </div>
-                <div class="flex items-center justify-between gap-4">
-                  <div class="flex items-center gap-2">
-                    <div class="flex -space-x-1">
-                      <div v-for="n in 3" :key="n" 
-                        class="w-1.5 h-1.5 rounded-full"
-                        :class="model.intelligence_level >= n*30 ? 'bg-primary' : 'bg-border'"></div>
-                    </div>
-                    <span class="text-[10px] font-black uppercase opacity-60">Lv. {{ model.intelligence_level }}</span>
-                  </div>
-                  <p class="text-xs font-mono font-bold text-primary">${{ model.input_price }} / M</p>
+                <button @click="showApiKeyDialog = true"
+                  class="glass-panel px-8 py-4 rounded-2xl font-bold text-sm interactive-scale border-border hover:bg-main/80">
+                  {{ $t('dashboard.regenerateKey') }}
+                </button>
+              </div>
+              <p class="text-xs text-muted mt-6 flex items-center gap-2">
+                <ShieldCheckIcon class="w-4 h-4 text-emerald-500" />
+                {{ $t('dashboard.apiKeyWarning') }}
+              </p>
+            </section>
+
+            <!-- Usage Chart: Swiss Style Charting -->
+            <section class="glass-panel p-10 rounded-[40px] depth-2">
+              <div class="flex items-center justify-between mb-10">
+                <h2 class="text-2xl font-bold flex items-center gap-3">
+                  <ChartBarIcon class="w-6 h-6 text-primary" />
+                  {{ $t('dashboard.usageTrend') }}
+                </h2>
+                <div class="flex gap-2">
+                  <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">{{ $t('dashboard.thirtyDays') }}</span>
                 </div>
               </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="mt-8 pt-8 border-t border-border grid grid-cols-2 gap-4">
-              <button @click="goToAdmin" v-if="isAdmin" 
-                class="bg-main border border-border px-4 py-4 rounded-2xl font-bold text-xs interactive-scale uppercase tracking-widest opacity-80 hover:opacity-100">
-                {{ $t('dashboard.admin') }}
-              </button>
-              <button @click="router.push('/api-docs')" 
-                class="bg-main border border-border px-4 py-4 rounded-2xl font-bold text-xs interactive-scale uppercase tracking-widest opacity-80 hover:opacity-100">
-                {{ $t('dashboard.apiDocs') }}
-              </button>
-            </div>
-          </section>
-        </aside>
+              <div ref="trendChart" class="h-80 w-full"></div>
+            </section>
+
+            <!-- Model Table: Minimalist Data -->
+            <section class="glass-panel p-10 rounded-[40px] depth-2 overflow-hidden">
+              <h2 class="text-2xl font-bold mb-8">{{ $t('dashboard.modelConsumption') }}</h2>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                  <thead>
+                    <tr class="text-left border-b border-border pb-4">
+                      <th class="pb-6 text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('dashboard.model') }}</th>
+                      <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('dashboard.tokens') }}</th>
+                      <th class="pb-6 text-right text-[10px] font-black uppercase tracking-widest opacity-40">{{ $t('dashboard.cost') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-border">
+                    <tr v-for="model in stats.modelStats" :key="model.model_name" class="group hover:bg-primary/[0.02] transition-colors">
+                      <td class="py-6">
+                        <p class="font-bold text-lg mb-1">{{ model.model_name }}</p>
+                        <p class="text-xs opacity-50 uppercase font-black tracking-tighter">{{ model.provider }}</p>
+                      </td>
+                      <td class="py-6 text-right font-mono font-bold">{{ formatNumber(model.total_tokens) }}</td>
+                      <td class="py-6 text-right font-mono font-bold text-primary">${{ (model.total_cost || 0).toFixed(4) }}</td>
+                    </tr>
+                    <tr v-if="!stats.modelStats?.length">
+                      <td colspan="3" class="py-12 text-center opacity-30 italic font-medium">{{ $t('dashboard.noData') }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+          <!-- Sidebar Area (4 cols) -->
+          <aside class="lg:col-span-4 space-y-8">
+            <!-- Available Models Card -->
+            <section class="glass-panel p-8 rounded-[40px] depth-2 sticky top-28">
+              <div class="flex items-center justify-between mb-8">
+                <h2 class="text-xl font-bold m-0">{{ $t('dashboard.ecosystem') }}</h2>
+                <span class="px-3 py-1 bg-main border border-border rounded-full text-[10px] font-bold uppercase">{{ models.length }} {{ $t('dashboard.active') }}</span>
+              </div>
+              <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-4 scrollbar-hide">
+                <div v-for="model in models" :key="model.id" @click="selectModel(model)"
+                  class="glass-panel p-6 rounded-3xl depth-1 border-transparent hover:border-primary/30 transition-all cursor-pointer group interactive-scale">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-main rounded-2xl flex items-center justify-center border border-border group-hover:bg-primary/5 transition-colors">
+                      <img :src="`/logos/${getProviderLogo(model.provider)}`" class="w-6 h-6 filter grayscale group-hover:grayscale-0 transition-all" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-bold truncate">{{ model.display_name }}</p>
+                      <p class="text-[10px] font-black uppercase opacity-40">{{ model.provider }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                      <div class="flex -space-x-1">
+                        <div v-for="n in 3" :key="n"
+                          class="w-1.5 h-1.5 rounded-full"
+                          :class="model.intelligence_level >= n*30 ? 'bg-primary' : 'bg-border'"></div>
+                      </div>
+                      <span class="text-[10px] font-black uppercase opacity-60">Lv. {{ model.intelligence_level }}</span>
+                    </div>
+                    <p class="text-xs font-mono font-bold text-primary">${{ model.input_price }} / M</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="mt-8 pt-8 border-t border-border grid grid-cols-2 gap-4">
+                <button @click="goToAdmin" v-if="isAdmin"
+                  class="bg-main border border-border px-4 py-4 rounded-2xl font-bold text-xs interactive-scale uppercase tracking-widest opacity-80 hover:opacity-100">
+                  {{ $t('dashboard.admin') }}
+                </button>
+                <button @click="router.push('/api-docs')"
+                  class="bg-main border border-border px-4 py-4 rounded-2xl font-bold text-xs interactive-scale uppercase tracking-widest opacity-80 hover:opacity-100">
+                  {{ $t('dashboard.apiDocs') }}
+                </button>
+              </div>
+            </section>
+          </aside>
+        </div>
       </div>
     </main>
 
@@ -172,8 +206,10 @@
         <h3 class="text-xl font-bold mb-4">{{ $t('dashboard.rechargeDialog') }}</h3>
         <div>
           <label class="block text-xs font-black uppercase tracking-widest opacity-40 mb-3">{{ $t('dashboard.rechargeAmount') }}</label>
-          <input v-model="rechargeAmount" type="number"
-            class="w-full bg-main border border-border rounded-2xl px-6 py-4 font-mono font-bold text-xl focus:outline-none focus:border-primary" />
+          <input v-model="rechargeAmount" type="number" min="1" step="0.01"
+            @input="validateAmount"
+            :class="['w-full bg-main border rounded-2xl px-6 py-4 font-mono font-bold text-xl focus:outline-none transition-colors', amountError ? 'border-rose-500 focus:border-rose-500' : 'border-border focus:border-primary']" />
+          <p v-if="amountError" class="text-xs text-rose-500 mt-2 font-bold">{{ amountError }}</p>
         </div>
         <div>
           <label class="block text-xs font-black uppercase tracking-widest opacity-40 mb-3">{{ $t('dashboard.rechargeNote') }}</label>
@@ -225,6 +261,8 @@ const showApiKeyDialog = ref(false)
 const rechargeAmount = ref(10)
 const rechargeNote = ref('')
 const isAdmin = computed(() => authStore.isAdmin)
+const loading = ref(true)
+const amountError = ref('')
 
 const stats = ref({
   totalRequests: 0,
@@ -245,18 +283,23 @@ const statCards = computed(() => [
 const trendChart = ref(null)
 
 onMounted(async () => {
-  const profileRes = await authStore.fetchProfile()
-  if (!profileRes?.success) {
-    ElMessage.error(t('dashboard.sessionExpired'))
-    authStore.logout()
-    router.push('/login')
-    return
+  loading.value = true
+  try {
+    const profileRes = await authStore.fetchProfile()
+    if (!profileRes?.success) {
+      ElMessage.error(t('dashboard.sessionExpired'))
+      authStore.logout()
+      router.push('/login')
+      return
+    }
+
+    await modelsStore.fetchModels()
+    await fetchStats()
+    await nextTick()
+    initCharts()
+  } finally {
+    loading.value = false
   }
-  
-  await modelsStore.fetchModels()
-  await fetchStats()
-  await nextTick()
-  initCharts()
 })
 
 async function fetchStats() {
@@ -289,13 +332,17 @@ async function initCharts() {
   const chart = echarts.init(trendChart.value)
   const isDark = document.documentElement.classList.contains('dark')
   
+  const tooltipBg = isDark ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+  const tooltipBorder = isDark ? '#475569' : '#e5e7eb'
+  const tooltipText = isDark ? '#f1f5f9' : '#111827'
+  
   const option = {
     grid: { left: '3%', right: '3%', bottom: '3%', top: '5%', containLabel: true },
     tooltip: { 
       trigger: 'axis',
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      borderColor: '#e5e7eb',
-      textStyle: { color: '#111827', fontWeight: 'bold' }
+      backgroundColor: tooltipBg,
+      borderColor: tooltipBorder,
+      textStyle: { color: tooltipText, fontWeight: 'bold' }
     },
     xAxis: {
       type: 'category',
@@ -345,8 +392,8 @@ function selectModel(model) {
 function goToAdmin() { router.push('/admin') }
 
 async function recharge() {
-  if (!rechargeAmount.value || isNaN(rechargeAmount.value)) {
-    ElMessage.error(t('dashboard.invalidAmount'))
+  validateAmount()
+  if (amountError.value) {
     return
   }
   try {
@@ -363,6 +410,9 @@ async function recharge() {
     if (!response.ok) throw new Error('Recharge failed')
     ElMessage.success(t('dashboard.rechargeSuccess'))
     showRechargeDialog.value = false
+    rechargeAmount.value = 10
+    rechargeNote.value = ''
+    amountError.value = ''
     await authStore.fetchProfile()
     await fetchStats()
   } catch (error) {
@@ -373,6 +423,17 @@ async function recharge() {
 function getProviderLogo(provider) {
   const logoMap = { 'OpenAI': 'openai.svg', 'Anthropic': 'anthropic.svg', 'Google': 'google.svg', 'xAI': 'xai.svg', 'Mistral AI': 'mistral.svg', 'MiniMax': 'minimax.svg', 'Alibaba Qwen': 'qwen.svg' }
   return logoMap[provider] || 'openai.svg'
+}
+
+function validateAmount() {
+  const value = parseFloat(rechargeAmount.value)
+  if (isNaN(value) || value <= 0) {
+    amountError.value = 'Amount must be greater than 0'
+  } else if (value > 10000) {
+    amountError.value = 'Amount cannot exceed $10,000'
+  } else {
+    amountError.value = ''
+  }
 }
 </script>
 

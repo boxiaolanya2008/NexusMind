@@ -100,48 +100,73 @@ NexusMind is a sophisticated AI model proxy service designed to simplify integra
 
 *Prices are per million tokens*
 
+### Model Distribution by Provider
+
+```mermaid
+pie
+    title AI Models by Provider
+    "OpenAI" : 1
+    "Anthropic" : 2
+    "Google" : 2
+    "xAI" : 1
+    "Zhipu AI" : 1
+    "Alibaba Qwen" : 1
+    "Mistral AI" : 1
+    "Meta" : 1
+```
+
 ---
 
 ## Architecture
 
-NexusMind follows a clean, modular architecture with clear separation of concerns:
+```mermaid
+flowchart TB
+    subgraph Frontend["Frontend (Vue 3)"]
+        Dashboard["Dashboard"]
+        Chat["Chat"]
+        Admin["Admin"]
+        Config["Config"]
+    end
 
+    subgraph Backend["Backend (Express.js)"]
+        Routes["Routes"]
+        Controllers["Controllers"]
+        Services["Core Services"]
+        Middleware["Middleware"]
+
+        Services --> Billing["Billing Service"]
+        Services --> Queue["Request Queue"]
+        Services --> Cache["Cache Service"]
+        Services --> KB["Knowledge Base"]
+        Services --> Memory["Memory System"]
+        Services --> Format["Format Converter"]
+    end
+
+    subgraph Data["Data Layer"]
+        SQLite["SQLite"]
+        Knowledge["Knowledge Base"]
+        ConfigFile["Config Files"]
+    end
+
+    subgraph External["External AI Providers"]
+        OpenAI["OpenAI"]
+        Anthropic["Anthropic"]
+        Google["Google"]
+        xAI["xAI"]
+        Zhipu["Zhipu AI"]
+        Qwen["Qwen"]
+    end
+
+    Frontend -->|HTTP/REST| Backend
+    Backend --> Data
+    Backend --> External
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Frontend (Vue 3)                        │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
-│  │ Dashboard│ │  Chat    │ │  Admin   │ │  Config  │      │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
-└─────────────────────────────────────────────────────────────┘
-                            │ HTTP/REST
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Backend (Express.js)                      │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
-│  │  Routes  │ │Controllers│ │Services  │ │Middleware│      │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Core Services                           │   │
-│  │  • Billing Service  • Request Queue  • Cache Service  │   │
-│  │  • Knowledge Base  • Memory System  • Format Conv.  │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Data Layer                                │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐                   │
-│  │  SQLite  │ │ Knowledge│ │  Config  │                   │
-│  └──────────┘ └──────────┘ └──────────┘                   │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│              External AI Providers                          │
-│  OpenAI │ Anthropic │ Google │ xAI │ Zhipu │ Qwen │ ...     │
-└─────────────────────────────────────────────────────────────┘
-```
+
+**Technical Notes**:
+- Uses SQLite database, suitable for small to medium-scale deployments
+- Request queue is in-memory, data loss on service restart
+- No distributed cache layer, consider adding Redis for production
+- Single-process deployment without high availability design
 
 ---
 
@@ -416,87 +441,87 @@ Returns server status, uptime, memory usage, and queue statistics.
 
 ## Project Structure
 
-```
-NexusMind/
-├── backend/                    # Backend Service
-│   ├── src/
-│   │   ├── app.js             # Application entry point
-│   │   ├── config/            # Configuration files
-│   │   │   ├── database.js    # Database initialization
-│   │   │   └── models.js      # Model definitions
-│   │   ├── controllers/       # Request handlers
-│   │   │   ├── authController.js
-│   │   │   ├── modelController.js
-│   │   │   └── adminController.js
-│   │   ├── middleware/        # Express middleware
-│   │   │   ├── authMiddleware.js
-│   │   │   └── rateLimitMiddleware.js
-│   │   ├── routes/           # API routes
-│   │   │   ├── authRoutes.js
-│   │   │   ├── apiRoutes.js
-│   │   │   └── adminRoutes.js
-│   │   ├── services/         # Business logic
-│   │   │   ├── billingService.js
-│   │   │   ├── cacheService.js
-│   │   │   ├── formatConverter.js
-│   │   │   ├── glmService.js
-│   │   │   ├── hotReloadService.js
-│   │   │   ├── knowledgeBaseService.js
-│   │   │   ├── memoryFragmentSystem.js
-│   │   │   ├── memoryManager.js
-│   │   │   ├── requestQueue.js
-│   │   │   └── toolService.js
-│   │   └── utils/            # Utility functions
-│   │       ├── logger.js
-│   │       └── systemPrompts.js
-│   ├── data/                 # SQLite database files
-│   │   └── nexusmind.db
-│   ├── logs/                 # Application logs
-│   │   ├── combined.log
-│   │   └── error.log
-│   ├── cli/                  # CLI tools
-│   │   └── nexus-cli.js
-│   ├── package.json
-│   └── .env                  # Environment variables
-├── frontend/                  # Frontend Application
-│   ├── src/
-│   │   ├── App.vue           # Root component
-│   │   ├── main.js           # Application entry
-│   │   ├── components/       # Reusable components
-│   │   │   └── NavBar.vue
-│   │   ├── views/            # Page components
-│   │   │   ├── Login.vue
-│   │   │   ├── Register.vue
-│   │   │   ├── Home.vue
-│   │   │   ├── Dashboard.vue
-│   │   │   ├── Config.vue
-│   │   │   ├── Chat.vue
-│   │   │   ├── ApiDocs.vue
-│   │   │   ├── ModelDetail.vue
-│   │   │   └── Admin.vue
-│   │   ├── stores/           # Pinia stores
-│   │   ├── router/           # Vue Router configuration
-│   │   ├── locales/          # i18n translations
-│   │   │   ├── en-US.js
-│   │   │   └── zh-CN.js
-│   │   └── style.css         # Global styles
-│   ├── public/
-│   │   └── logos/            # Model provider logos
-│   │       ├── openai.svg
-│   │       ├── anthropic.svg
-│   │       ├── google.svg
-│   │       └── ...
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   └── package.json
-├── knowledge_base/            # RAG knowledge base
-│   └── RAG-1.json
-├── AGENTS.md                  # System prompts configuration
-├── README.md                  # This file
-├── README_ZH.md              # Chinese documentation
-├── LICENSE                    # MIT License
-└── .gitignore
+```mermaid
+mindmap
+  root((NexusMind))
+    backend["Backend Service"]
+      src["Source Code"]
+        app.js["Application entry"]
+        config["Configuration"]
+          database.js["Database init"]
+          models.js["Model definitions"]
+        controllers["Request handlers"]
+          authController.js
+          modelController.js
+          adminController.js
+        middleware["Express middleware"]
+          authMiddleware.js
+          rateLimitMiddleware.js
+        routes["API routes"]
+          authRoutes.js
+          apiRoutes.js
+          adminRoutes.js
+        services["Business logic"]
+          billingService.js
+          cacheService.js
+          formatConverter.js
+          glmService.js
+          hotReloadService.js
+          knowledgeBaseService.js
+          memoryFragmentSystem.js
+          memoryManager.js
+          requestQueue.js
+          toolService.js
+        utils["Utilities"]
+          logger.js
+          systemPrompts.js
+      data["SQLite database"]
+        nexusmind.db
+      logs["Application logs"]
+        combined.log
+        error.log
+      cli["CLI tools"]
+        nexus-cli.js
+      package.json
+      .env["Environment variables"]
+    frontend["Frontend Application"]
+      src["Source Code"]
+        App.vue["Root component"]
+        main.js["Application entry"]
+        components["Reusable components"]
+          NavBar.vue
+        views["Page components"]
+          Login.vue
+          Register.vue
+          Home.vue
+          Dashboard.vue
+          Config.vue
+          Chat.vue
+          ApiDocs.vue
+          ModelDetail.vue
+          Admin.vue
+        stores["Pinia stores"]
+        router["Vue Router config"]
+        locales["i18n translations"]
+          en-US.js
+          zh-CN.js
+        style.css["Global styles"]
+      public["Static assets"]
+        logos["Model provider logos"]
+          openai.svg
+          anthropic.svg
+          google.svg
+      index.html
+      vite.config.js
+      tailwind.config.js
+      package.json
+    knowledge_base["RAG knowledge base"]
+      RAG-1.json
+    AGENTS.md["System prompts config"]
+    README.md["English docs"]
+    README_ZH.md["Chinese docs"]
+    LICENSE["MIT License"]
+    .gitignore
 ```
 
 ---
@@ -549,6 +574,15 @@ npm run cli
 ---
 
 ## Deployment
+
+### Production Deployment Considerations
+
+- **Database**: SQLite is suitable for small to medium-scale deployments; consider migrating to PostgreSQL for high-concurrency scenarios
+- **Cache**: Consider adding Redis cache layer for better performance
+- **Queue**: Current in-memory queue loses data on restart; use BullMQ + Redis for production
+- **CORS**: Configure CORS whitelist, avoid using `origin: '*'`
+- **Security**: Rotate JWT_SECRET regularly, use strong random keys
+- **Monitoring**: Consider integrating monitoring and alerting (e.g., Prometheus + Grafana)
 
 ### Production Deployment
 
@@ -617,10 +651,6 @@ Docker support is planned for future releases.
 
 We welcome contributions from the community! Here's how you can help:
 
-### Reporting Issues
-
-If you find a bug or have a feature request, please open an issue on GitHub.
-
 ### Pull Requests
 
 1. Fork the repository
@@ -628,6 +658,10 @@ If you find a bug or have a feature request, please open an issue on GitHub.
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+### Reporting Issues
+
+If you find a bug or have a feature request, please open an issue on GitHub.
 
 ### Development Guidelines
 

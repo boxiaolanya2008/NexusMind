@@ -2,14 +2,20 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import compression from 'compression';
+import swaggerUi from 'swagger-ui-express';
 import { initializeDatabase } from './config/database.js';
-import { initializeModels } from './config/models.js';
+import { initializeModels, enableHotReload } from './config/models.js';
+import { swaggerSpec } from './config/swagger.js';
 import authRoutes from './routes/authRoutes.js';
 import apiRoutes from './routes/apiRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import { chatCompletion } from './controllers/modelController.js';
+import { authenticateApiKey } from './middleware/authMiddleware.js';
 import logger from './utils/logger.js';
 import { getQueueStats } from './services/requestQueue.js';
 import { loadKnowledgeBase } from './services/knowledgeBaseService.js';
+import { apiLimiter } from './middleware/rateLimitMiddleware.js';
+import { loadModelConfigs, watchModelConfigs } from './services/hotReloadService.js';
 
 dotenv.config();
 
@@ -78,21 +84,25 @@ app.use((req, res, next) => {
   next();
 });
 
-app.set('trust proxy', true);
 app.set('http/2', true);
 
-app.use('/api/auth', authRoutes);
-app.use('/api', apiRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/v1', apiRoutes);
+app.post('/chat/completions', apiLimiter, authenticateApiKey, chatCompletion);
+app.use('/api/auth', apiLimiter, authRoutes);
+app.use('/api', apiLimiter, apiRoutes);
+app.use('/api/admin', apiLimiter, adminRoutes);
+app.use('/v1', apiLimiter, apiRoutes);
+app.use('/api/v1', apiLimiter, apiRoutes);
 
 app.get('/', (req, res) => {
   res.json({
     message: 'NexusMind AI Model Proxy API',
     version: '1.0.0',
-    pid: process.pid
+    pid: process.pid,
+    docs: '/api-docs'
   });
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/health', (req, res) => {
   const health = {
@@ -132,8 +142,15 @@ async function startServer() {
     logger.info('Initializing models...');
     await initializeModels();
 
+    logger.info('Loading model configurations...');
+    loadModelConfigs();
+
     logger.info('Loading knowledge base...');
     await loadKnowledgeBase();
+
+    logger.info('Enabling models config hot reload...');
+    enableHotReload();
+    watchModelConfigs();
 
     app.listen(PORT, () => {
       logger.info(`Server ${process.pid} listening on port ${PORT}`);
